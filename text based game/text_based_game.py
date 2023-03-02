@@ -2,6 +2,7 @@ import random
 import time
 room = 1
 choice = "PLACEHOLDER"
+test = 1
 print("welcome to")
 time.sleep(1)
 print("cool")
