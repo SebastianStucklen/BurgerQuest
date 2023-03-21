@@ -21,15 +21,17 @@ def intro():
 #item variables
 #intentory = ["torch","sword","armor","nothing","nothing"]
 inventory = ["torch","sword","armor","shield","potion"]
-statnames = ["Health","Damage","Armor"]
+statnames = ["Health","Average Damage","Armor"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
 stats = [100, 7, 50]
+#when you get the sword make average damage stats[1] 15
 bossnames = ["north","south","east","west"]
-#change this to 15 when player gets upgraded sword
 defending = False
 #boss fight
+#https://gamedev.stackexchange.com/questions/128024/how-can-i-make-text-based-combat-more-engaging
 def boss_fight(player_hp, boss_hp, boss_attack, boss_number):
     if inventory[1] == "sword":
+        #roll the dice when ever the player chooses attack.
         player_attack = 7
     if inventory[1] == "cleaver":
         player_attack = 16
