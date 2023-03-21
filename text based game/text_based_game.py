@@ -1,10 +1,8 @@
 import random
 import time
-global playerHealth, hasShield, sword, hasPotion, hasArmor, defending, bossIsAttacking
 #other things
 room = 10
 choice = "PLACEHOLDER"
-bossIsAttacking = False
 #intro
 def intro():
 	print("welcome to")
@@ -20,71 +18,94 @@ def intro():
 	print("Type help for help")
 #intro()
 #character stats
-playerHealth = 100
 #item variables
-inventory = []
-hasShield = True
-sword = 7
+#intentory = ["torch","sword","armor","nothing","nothing"]
+inventory = ["torch","sword","armor","shield","potion"]
+statnames = ["Health","Damage","Armor"]
+#MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
+stats = [100, 7, 50]
+bossnames = ["north","south","east","west"]
 #change this to 15 when player gets upgraded sword
-hasPotion = True
-hasArmor = True
 defending = False
 #boss fight
-def bossFight(bossHealth,damage):
-	global playerHealth, hasShield, sword, hasPotion, hasArmor, defending, bossIsAttacking
-	while bossHealth >= 0 or playerHealth >= 0:
-		print("Boss health:")
-		print(bossHealth)
-		print("Your health")
-		print(playerHealth)
-		if bossIsAttacking == False:
-			if hasShield == False and hasPotion == False:
-				print("you can attack")
-				choice = input()
-			elif hasShield == True and hasPotion == False:
-				print("you can attack or defend")
-				choice = input()
-			elif hasShield == True and hasPotion == True:
-				print("you can attack, defend, or use a potion")
-				choice = input()
-			if choice == 'attack':
-				bossHealth-=sword
-				print("you attack!")
-				bossIsAttacking = True
-			elif choice == 'defend':
-				defending = True
-				print("you ready your shield")
-				bossIsAttacking = True
-			elif choice == 'potion':
-				print("you drink your potion")
-				if playerHealth < 100:
-					playerHealth+=50
-				if playerHealth > 100:
-					playerHealth=100
-				bossIsAttacking = True
-			else:
-				print("not an option")
-		if bossIsAttacking == True:
-			print("the boss attacks!")
-			if defending == False:
-				playerHealth-=damage
-			if defending == True:
-				playerHealth-=damage/2
-			bossIsAttacking = False
-		#return playerHealth and bossHealth
-def northBoss():
-	print("test")
-	bossFight(100,10)
+def boss_fight(player_hp, boss_hp, boss_attack, boss_number):
+    if inventory[1] == "sword":
+        player_attack = 7
+    if inventory[1] == "cleaver":
+        player_attack = 16
+    while player_hp > 0 and boss_hp > 0:
+        # Player turn ADD DIFFERENT PRINTS and CHOICES   DEPENDING ON INVENTORY!!!!!!!!!!!!
+        if inventory[4] != "nothing":
+            if inventory[5] != "nothing":
+                print("Enter 'attack' to attack, 'defend' to defend, 'potion' to use a potion, or 'talk' to talk: ")
+                choices = "attack, defend, potion, talk, help, choices"
+            action = input("")
+        if inventory[4] == "nothing":
+            print("Enter 'attack' to attack, 'defend' to defend, 'potion' to use a potion, or 'talk' to talk: ")
+            choices = "attack, defend, talk, help, choices"
+            action = input("")
+        if action == 'a' or action == 'attack':
+            # Player attacks
+            boss_hp -= player_attack
+            print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+        elif action == 'd' or action == 'defend':
+            # Player defends
+            print(f"You brace for {bossnames[boss_number]}'s attack.")
+        elif action == 't' or action == 'defend':
+            # Player attempts to talk
+            success = random.random() < 0.15
+            if success:
+                print("You successfully talked your way out of the fight!")
+                break
+            else:
+                print("Your attempt to talk failed.")
+        elif action == 'h' or action == 'help':
+                print(f"inventory{inventory}")
+                for i in range(3):
+                    print(f"{statnames[i]}:{stats[i]}")
+        elif action == 'c' or action == 'choices':
+            print(choices)
+        # Boss attacks
+        if boss_hp > 0:
+            if action == 'd':
+                # Player takes reduced damage when defending
+                player_hp -= int(boss_attack / 2)
+                print(f"{bossnames[boss_number]} hits you for {int(boss_attack / 2)} damage!")
+            else:
+                player_hp -= boss_attack
+                print(f"{bossnames[boss_number]} hits you for {boss_attack} damage!")
+        print(f"Your HP: {player_hp}")
+        print(f"Boss HP: {boss_hp}")
+    if player_hp <= 0:
+        stats[0] = 0
+        print(f"You have been defeated by {bossnames[boss_number]}.")
+    elif boss_hp <= 0:
+        bossnames[boss_number] = "dead"
+        print(f"You have defeated {bossnames[boss_number]}!")
 #help
 def help():
-    #put stuff here
-    print("Type I to view inventory")
-while choice != "quit" or playerHealth > 0:
-	if room == 1:
-		choice = input("You are in a grand hall. There are four doors. north, east, south, and west.")
-		if choice == 'help':
-			help()
-	#playerHealth = -100
-	#bossFight(100,34)
+    print(f"inventory{inventory}")
+    for i in range(3):
+        print(f"{statnames[i]}:{stats[i]}")
+print("IMPORTANT tutorial PLEASE READ:")
+print("when entering your options, you can either enter the full choice or just the first letter")
+print("you can type help at any time to view your inventory and stats")
+print("you can also type choices at any time to view your choices")
 
+while True:
+    if room == 10:
+        choices = "north, south, east, west, help, choices"
+        print("You are in a grand hall. There are four doors to north, east, south, and west respectively.")
+        choice = input("")
+        if choice == 'help' or choice == 'h':
+            help()
+        if choice == 'choices' or choice == 'c':
+            print(choices)
+        if choice == 'north' or choice == 'n':
+            room = 20
+    if room == 20:
+        print("You are in a dark, damp hallway. There are two doors. One lies to the north, and the other to the east")
+        choice = input("You can also go back to the previous room.")
+    if stats[0] <= 0:
+        break
 print("you dead")
