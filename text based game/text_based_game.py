@@ -184,10 +184,10 @@ while True:
 		choice = input("You can also go back to the previous room.")
 	if stats[0] <= 0:
 		break
+print("")
 print("No, you’re NOT a real gamer.")
-
-print("I’m so sick of all these people that think they’re gamers. No, you’re not. Most of you are not even close to being gamers. I see these people saying “I put well over 100 hours in this game, it’s great!” that’s nothing, most of us can easily put 300+ hours in all our games. I see people who only have a Nintendo Switch and claim to be gamers. Come talk to me when you pick up a PS4 controller then we be friends.")
-
+print("")
+print("I’m so sick of all these people that think they’re gamers. No, you’re not. Most of you are not even close to being gamers.I see these people saying “I put well over 100 hours in this game, it’s great!” that’s nothing, most of us can easily put 300+ hours in all our games.I see people who only have a Nintendo Switch and claim to be gamers. Come talk to me when you pick up a PS4 controller then we be friends.")
 print("Also DEAR ALL WOMEN: Pokémon is not a real game. Animal Crossing is not a real game. The Sims is not a real game. Mario is not a real game. Stardew valley is not a real game. Mobile games are NOT.REAL.GAMES. put down the baby games and play something that requires challenge and skill for once.")
-
+print("")
 print("Sincerely, all of the ACTUAL gamers.")
