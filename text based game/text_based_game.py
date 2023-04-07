@@ -1,47 +1,12 @@
 import random
 import time as t
-
+def pause():
+    programPause = input("Press the <ENTER> key to continue...")
 
 #other things
 
 room = 10
 choice = "PLACEHOLDER"
-skipintro = input("skip intro? y/n")
-
-#intro
-if skipintro == 'n':
-
-	print("welcome to BurgerQuest")
-	t.sleep(0.9)
-	print("Our main character is Stephen H. Burgerguy, a burger shop owner and chef.")
-	t.sleep(1)
-	print("Stephen was a normal guy, flipping burgers and cooking burgers and eating burgers")
-	t.sleep(1)
-	print("Until one day, that all changed.")
-	t.sleep(0.9)
-	print("A jerkhole customer decided to complain about Stephens flawless burgers!!!")
-	t.sleep(1)
-	print('"There is no sauce on my burger!!!" the Karen blabbed, completely oblivius to the fact that you put th	sauce on the burger yourself.')
-	print("(what an idiot, am i right?)")
-	t.sleep(1.5)
-	print("After this incident, annoying customers started showing up week after week,")
-	t.sleep(1)
-	print("day by day,")
-	t.sleep(0.9)
-	print("hour by hour,")
-	t.sleep(0.9)
-	print("minute by minute.")
-	t.sleep(0.9)
-	print("Burgerguy grew tired of these annoying customers.")
-	t.sleep(1)
-	print("Stephen did some research (on twitter), and it turned out that he had been cursed by the evil BurgerKing,	who resides within a burger dungeon!")
-	t.sleep(1.2)
-	print("The Burger King was mad that Stephen's burgers were better than his (what a jerk).")
-	t.sleep(1.1)
-	print("So, Stephen, with his trusty sword (that he bought off craigslist), enters the dungeon to take theBurger		King on")
-	t.sleep(1.3)
-	print("So begins, BurgerQuest")
-	t.sleep(1.5)
 
 #character stats
 #item variables
@@ -54,100 +19,242 @@ statnames = ["Health","Average Damage","Armor"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
 
 stats = [100, 7, 50]
+potion = 150
 #when you get the sword make average damage stats[1] 15
 
-bossnames = ["north","south","east","west"]
+bossnames = ["north","south","east","west","Zomburger"]
+#monster types
+#zomburger: 80 hp, 10 damage, 4, 0
 defending = False
 
 
 #boss fight
 #https://gamedev.stackexchange.com/questions/128024/how-can-i-make-text-based-combat-more-engaging
-def boss_fight(player_hp, boss_hp, boss_attack, boss_number,player_armor):
+def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_defense):
+	turnOver = False
+	stabbed = 0
+	stunned = 0
+	bleeding = 0
 	while player_hp > 0 and boss_hp > 0:
-		# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ONINVENTORY!!!!!!!!!!!!
-		if inventory[4] == "potion":
-			if inventory[3] == "shield":
-				print("Enter 'attack' to attack, 'defend' to defend, 'potion'to use a potion, or 'talk' to talk: ")
-				choices = "attack, defend, potion, talk, help,choices"
-			if inventory[3] != "shield":
-				print("Enter 'attack' to attack, 'potion' to use potion, or 'talk' to talk: ")
-				choices = "attack, potion, talk, help, choices"
-		if inventory[4] != "potion":
-			if inventory[3] == "shield":
-				print("Enter 'attack' to attack, 'defend' to defend, or 'talk' to talk: ")
-				choices = "attack, defend, talk, help,choices"
-			if inventory[3] != "shield":
-				print("Enter 'attack' to attack, or 'talk' to talk: ")
-				choices = "attack, talk, help, choices"
-		action = input("")
-		if action == 'a' or action == 'attack':
-			# Player attacks
-			if inventory[1] == "sword":
-			#roll the dice when ever the player chooses attack.
-				damage_calc = random.randint(5,8)
-				if damage_calc == 8:
-					player_attack = 10
-					print("Critical Hit! 10 Damage!")
+		while turnOver == False:
+			# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ONINVENTORY!!!!!!!!!!!!
+			# make it so character can do multiple attacks with varying damage
+			# but boss has a chance to dodge these attacks
+			# code potion
+			# make it so player can pick how much of the potion they want to use
+			if inventory[4] == "potion":
+				if inventory[3] == "shield":
+					print("Enter 'attack' to attack, 'defend' to defend, 'potion'to use a potion, or 'talk' to talk: ")
+					choices = "attack, defend, potion, talk, help,choices"
+				if inventory[3] != "shield":
+					print("Enter 'attack' to attack, 'potion' to use potion, or 'talk' to talk: ")
+					choices = "attack, potion, talk, help, choices"
+			if inventory[4] != "potion":
+				if inventory[3] == "shield":
+					print("Enter 'attack' to attack, 'defend' to defend, or 'talk' to talk: ")
+					choices = "attack, defend, talk, help,choices"
+				if inventory[3] != "shield":
+					print("Enter 'attack' to attack, or 'talk' to talk: ")
+					choices = "attack, talk, help, choices"
+			action = input("")
+			print("")
+			#if stabbed >= 0:
+			if action == 'a' or action == 'attack':
+				#Player attacks
+				#roll the dice when ever the player chooses attack.
+				#attack types
+				#Big Sweep: High damage, high chance to be dodged, can cause bleeding on crit (instead of extra)
+				#Stab: High damage, Causes bleeding, cant be dodged, player misses their next turn
+				#Quick Slice: Average Damage, low chance to be dodged.
+				#Shield Bash: Low Damage, stuns boss (miss their next turn)
+				damage_calc = random.randint(stats[1]-3,stats[1]+1)
+				if damage_calc == stats[1]+1:
+					player_attack = stats[1]+3
+					print("Critical Hit!")
+				elif damage_calc == stats[1]-3:
+					player_attack = stats[1]-3
+					print("Crappy Hit!")
 				else:
 					player_attack = damage_calc
-			if inventory[1] == "cleaver":
-				damage_calc = random.randint(10,14)
-				if damage_calc == 14:
-					player_attack = 20
-					print("CRITICAL HIT! 10 DAMAGE!")
+				boss_hp -= player_attack
+				print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+				turnOver = True
+
+
+			if action == 'd' or action == 'defend':
+				# Player defends
+				print(f"You brace for {bossnames[boss_number]}'s attack.")
+				turnOver = True
+
+
+			elif action == 't' or action == 'talk':
+				# Player attempts to talk
+				success = random.random() < 0.15
+				if success:
+					print("You successfully talked your way out of the fight!")
+					break
 				else:
-					player_attack = damage_calc
-			boss_hp -= player_attack
-			print(f"You hit {bossnames[boss_number]} for {player_attack}damage!")
-		if action == 'd' or action == 'defend':
-			# Player defends
-			print(f"You brace for {bossnames[boss_number]}'s attack.")
-		elif action == 't' or action == 'defend':
-			# Player attempts to talk
-			success = random.random() < 0.15
-			if success:
-				print("You successfully talked your way out of th fight!")
-				break
-			else:
-				print("Your attempt to talk failed.")
-		elif action == 'h' or action == 'help':
-			print(f"inventory{inventory}")
-			for i in range(3):
-				print(f"{statnames[i]}:{stat[i]}")
-		elif action == 'c' or action == 'choices':
-			print(choices)
+					print("Your attempt to talk failed.")
+					turnOver = True
+
+
+			elif action == 'h' or action == 'help':
+				print(f"inventory{inventory}")
+				for i in range(3):
+					print(f"{statnames[i]}:{stats[i]}")
+
+			elif action == 'c' or action == 'choices':
+				print(choices)
+			
+		print("")
+
 		# Boss attacks
-		if boss_hp > 0:
-			if action == 'd':
-				# Player takes reduced damage when defending
-				if player_armor > 0:
-					player_armor -= int(boss_attack /2)
-					print(f"{bossnames[boss_number]}hits you for{int (boss_attack / 2)} damage! Your armor takes the hit!")
-				else:
-					player_hp -= int(boss_attack / 2)
-					print(f"{bossnames[boss_number]}hits you for{int (boss_attack / 2)} damage!")
-				stats[0] = player_hp
-				stats[2] = player_armor
+
+		if action == 'd':
+			# Player takes reduced damage when defending
+			if player_armor > 0:
+				player_armor -= int(boss_attack /2)
+				print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage! Your armor takes the hit!")
 			else:
-				if player_armor > 0:
-					player_armor -= boss_attack
-					print(f"{bossnames[boss_number]}hits you for {boss_attack} damage Your armor	takes the hit!")
-				else:
-					player_hp -= boss_attack
-					print(f"{bossnames[boss_number]}hits you for {boss_attack} damage!")
-				stats[0] = player_hp
-				stats[2] = player_armor
+				player_hp -= int(boss_attack / 2)
+				print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage!")
+			stats[0] = player_hp
+			stats[2] = player_armor
+
+		else:
+			if player_armor > 0:
+				player_armor -= boss_attack
+				print(f"{bossnames[boss_number]} hits you for {boss_attack} damage. Your armor takes the hit!")
+			else:
+				player_hp -= boss_attack
+				print(f"{bossnames[boss_number]} hits you for {boss_attack} damage!")
+			stats[0] = player_hp
+			stats[2] = player_armor
+		turnOver = False
+		if stabbed > 0:
+			stabbed-=1
+		if stunned > 0:
+			stunned-=1
+		if bleeding > 0:
+			bleeding-=1
+		print("")
 		print(f"Your HP: {player_hp}")
 		print(f"Boss HP: {boss_hp}")
+		pause()
 	if player_hp <= 0:
 		stats[0] = 0
 		print(f"You have been defeated by {bossnames[boss_number]}.")
 	elif boss_hp <= 0:
 		bossnames[boss_number] = "dead"
 		print(f"You have defeated {bossnames[boss_number]}!")
+		print("Your potion has been refilled!")
+		#REFILL POTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
+#boss_fight(stats[0], stats[2], 100, 20, 1, 0)
 #help
+
+skipintro = input("skip intro? y/n")
+
+#intro
+if skipintro == 'n':
+	print('')
+	print("welcome to BurgerQuest")
+	print('')
+	pause()
+	print("Our main character is Stephen H. Burgerguy, a burger shop owner and chef.")
+	print('')
+	pause()
+	print("Stephen was a normal guy, flipping burgers and cooking burgers and eating burgers")
+	print('')
+	pause()
+	print("Until one day, that all changed.")
+	print('')
+	pause()
+	print("A jerkhole customer decided to complain about Stephens flawless burgers!!!")
+	print('')
+	pause()
+	print('"There is no sauce on my burger!!!" the Karen blabbed, completely oblivius to the fact that you put th	sauce on the burger yourself.')
+	print("(what an idiot, am i right?)")
+	print('')
+	pause()
+	print("After this incident, annoying customers started showing up week after week,")
+	print('')
+	pause()
+	print("day by day,")
+	print('')
+	pause()
+	print("hour by hour,")
+	print('')
+	pause()
+	print("minute by minute.")
+	print('')
+	pause()
+	print("Burgerguy grew tired of these annoying customers.")
+	print('')
+	pause()
+	print("Stephen did some research (on twitter), and it turned out that he had been cursed by the evil BurgerKing,	who resides within a burger dungeon!")
+	print('')
+	pause()
+	print("The Burger King was mad that Stephen's burgers were better than his (what a jerk).")
+	print('')
+	pause()
+	print("So, Stephen, with his trusty sword (that he bought off craigslist), enters the dungeon to take the Burger King on")
+	print('')
+	pause()
+	print("So begins, BurgerQuest")
+	print('')
+	pause()
+
+
+skiptutorial = input("skip tutorial? y/n")
+
+if skiptutorial == 'n':
+	print('')
+	print('')
+	print('')
+	print("IMPORTANT tutorial PLEASE READ:")
+	print("when entering your options, you can either enter the full choice or just the first letter")
+	print("you can type help at any time to view your inventory and stats")
+	print("you can also type choices at any time to view your choices")
+
+#this is for the random monster encounters
+monsterRooms = ["false","false","false","false"]
+#1,5,9 is room 20
+#2,6,10 is room 30
+#3,7,11 is room 40
+#4,8,12 is room 50
+#maybe code multiple monster fights eventually
+for i in range(4):
+	placeholder = random.randint(1,5)
+	print(placeholder)
+	##room 20
+	if placeholder == 1:
+		monsterRooms[0] = "true"
+	#if placeholder == 5:
+	#	monsterRooms[0] = "double"
+	#if placeholder == 9:
+	#	monsterRooms[0] = "triple"
+	##room 30
+	if placeholder == 2:
+		monsterRooms[1] = "true"
+	#if placeholder == 6:
+	#	monsterRooms[1] = "double"
+	#if placeholder == 10:
+	#	monsterRooms[1] = "triple"
+	##room 40
+	if placeholder == 3:
+		monsterRooms[2] = "true"
+	#if placeholder == 7:
+	#	monsterRooms[2] = "double"
+	#if placeholder == 11:
+	#	monsterRooms[2] = "triple"
+	##room 50
+	if placeholder == 4:
+		monsterRooms[3] = "true"
+	#if placeholder == 8:
+	#	monsterRooms[3] = "double"
+	#if placeholder == 12:
+	#	monsterRooms[3] = "triple"
 def help():
 	print(f"inventory{inventory}")
 	for i in range(3):
@@ -159,29 +266,29 @@ def bigbooty():
 		help()
 	if choice == 'choices' or choice == 'c':
 		print(choices)
-
-skiptutorial = input("skip tutorial? y/n")
-if skiptutorial == 'n':
-	print('')
-	print('')
-	print('')
-	print("IMPORTANT tutorial PLEASE READ:")
-	print("when entering your options, you can either enter the full choice or just the first letter")
-	print("you can type help at any time to view your inventory and stats")
-	print("you can also type choices at any time to view your choices")
+	if choice == 'mon':
+		print(monsterRooms)
 while True:
 	if room == 10:
 		choices = "north, south, east, west, help, choices"
-		print("You are in a grand hall. There are four doors to north, east, south, and westrespectively.")
+		print("You are in a grand hall.")
+		print(" There are four doors to north, east, south, and west respectively.")
 		choice = input("")
 		bigbooty()
 		if choice == 'break' or choice == 'quit':
 			break
 		if choice == 'north' or choice == 'n':
 			room = 20
+
 	if room == 20:
-		print("You are in a dark, damp hallway. There are two doors. One lies to the north, and the otherto the	east")
-		choice = input("You can also go back to the previous room.")
+		if monsterRooms[0] == "true":
+			print("a thaiuyadw attacks")
+			boss_fight(stats[0], stats[2], 80, 10, 4, 0)
+		print("You are in a dark, damp hallway.")
+		choice = input("")
+		bigbooty()
+		if choice == 'break' or choice == 'quit':
+			break
 	if stats[0] <= 0:
 		break
 print("")
