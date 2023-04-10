@@ -11,15 +11,17 @@ choice = "PLACEHOLDER"
 #character stats
 #item variables
 
-#intentory = ["torch","sword","armor","nothing","nothing"]
-inventory = ["torch","sword","armor","shield","potion"]
+intentory = ["torch","sword","armor","nothing","burger"]
+#inventory = ["torch","sword","armor","shield","burger"]
 #              0        1       2       3         4
 
 statnames = ["Health","Average Damage","Armor"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
-
+attackTypes = ["sweep","stab","slice","bash"]
 stats = [100, 7, 50]
-potion = 150
+burger = 100
+
+#each burger heals 100
 #when you get the sword make average damage stats[1] 15
 
 bossnames = ["north","south","east","west","Zomburger"]
@@ -31,105 +33,155 @@ defending = False
 #boss fight
 #https://gamedev.stackexchange.com/questions/128024/how-can-i-make-text-based-combat-more-engaging
 def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_defense):
+	print("I havent coded potions/burgers yet so it wont work")
+	choices = ["attack", "defend", "burger", "talk", "help","choices"]
 	turnOver = False
+	hasTalked = False
+	dismembered = False
 	stabbed = 0
 	stunned = 0
 	bleeding = 0
 	while player_hp > 0 and boss_hp > 0:
-		while turnOver == False:
-			# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ONINVENTORY!!!!!!!!!!!!
-			# make it so character can do multiple attacks with varying damage
-			# but boss has a chance to dodge these attacks
-			# code potion
-			# make it so player can pick how much of the potion they want to use
-			if inventory[4] == "potion":
-				if inventory[3] == "shield":
-					print("Enter 'attack' to attack, 'defend' to defend, 'potion'to use a potion, or 'talk' to talk: ")
-					choices = "attack, defend, potion, talk, help,choices"
-				if inventory[3] != "shield":
-					print("Enter 'attack' to attack, 'potion' to use potion, or 'talk' to talk: ")
-					choices = "attack, potion, talk, help, choices"
-			if inventory[4] != "potion":
-				if inventory[3] == "shield":
-					print("Enter 'attack' to attack, 'defend' to defend, or 'talk' to talk: ")
-					choices = "attack, defend, talk, help,choices"
-				if inventory[3] != "shield":
-					print("Enter 'attack' to attack, or 'talk' to talk: ")
-					choices = "attack, talk, help, choices"
-			action = input("")
-			print("")
-			#if stabbed >= 0:
-			if action == 'a' or action == 'attack':
-				#Player attacks
-				#roll the dice when ever the player chooses attack.
-				#attack types
-				#Big Sweep: High damage, high chance to be dodged, can cause bleeding on crit (instead of extra)
-				#Stab: High damage, Causes bleeding, cant be dodged, player misses their next turn
-				#Quick Slice: Average Damage, low chance to be dodged.
-				#Shield Bash: Low Damage, stuns boss (miss their next turn)
-				damage_calc = random.randint(stats[1]-3,stats[1]+1)
-				if damage_calc == stats[1]+1:
-					player_attack = stats[1]+3
-					print("Critical Hit!")
-				elif damage_calc == stats[1]-3:
-					player_attack = stats[1]-3
-					print("Crappy Hit!")
-				else:
-					player_attack = damage_calc
-				boss_hp -= player_attack
-				print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
-				turnOver = True
+		if stabbed <= 0:
+			while turnOver == False:
+				# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ONINVENTORY!!!!!!!!!!!!
+				# make it so character can do multiple attacks with varying damage
+				# but boss has a chance to dodge these attacks
+				# code burger
+				# make it so player can pick how much of the burger they want to use
+				if inventory[4] == "burger":
+					if inventory[3] == "shield":
+						print("Enter 'attack' to attack, 'defend' to defend, 'burger'to use a burger, or 'talk' to talk: ")
+						print("Or type 'help' for stats or 'choices' for choices")
+					if inventory[3] != "shield":
+						print("Enter 'attack' to attack, 'burger' to use burger, or 'talk' to talk: ")
+						print("Or type 'help' for stats or 'choices' for choices")
+						choices[1] = "nothing"
+				if inventory[4] != "burger":
+					choices[2] = "nothing"
+					if inventory[3] == "shield":
+						print("Enter 'attack' to attack, 'defend' to defend, or 'talk' to talk: ")
+						print("Or type 'help' for stats or 'choices' for choices")
+					if inventory[3] != "shield":
+						print("Enter 'attack' to attack, or 'talk' to talk: ")
+						print("Or type 'help' for stats or 'choices' for choices")
+						choices[1] = "nothing"
+
+				action = input("")
+				print("")
 
 
-			if action == 'd' or action == 'defend':
-				# Player defends
-				print(f"You brace for {bossnames[boss_number]}'s attack.")
-				turnOver = True
+				if action == 'a' or action == 'attack':
+					#attackTypes = ["sweep","stab","slice","bash"]
+					sweep = stats[1] + 10
+					stab = stats[1] + 5
+					slice = stats[1]
+					bash = 3
+					#boss cant dodge if stunned
+					#Player attacks
+					#roll the dice when ever the player chooses attack.
+					#attack types
+					#Big Sweep: High damage, high chance to be dodged, can cause bleeding on crit (instead of extra)
+					#Stab: High damage, Causes bleeding, cant be dodged, player misses their next turn
+					#Quick Slice: Average Damage, low chance to be dodged.
+					#Shield Bash: Low Damage, stuns boss (miss their next turn)
+					#High dodge chance = 80
+					#average dodge chance = 40
+					#low dodge chance = 20
+					print("Attack Types:")
+					print("Big Sweep: An incredibly high damage and bloodletting attack with a somewhat high chance for the boss to dodge. Has a chance to cause dismemberment.")
+					print("Stab: A high damage and bloodletting attack which can't be dodged. However, you have a chance to miss your next turn.")
+					print("Quick Slice: An average attack with average damage. Low chance to be dodged.")
+					print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged.")
+					print("Which attack would you like to do?")
+					attackChoice = input("Type: sweep, stab, slice, or bash.")
+					if choice == "sweep":
+						dodge = random.randint(0,100)
+						if dodge > 80: 
+							damage_calc = random.randint(sweep-3,sweep+3)
+							if damage_calc == sweep+3:
+								player_attack = sweep+2
+								print("Critical Hit!")
+								dismemberChance = random.random() < 0.7
+								if dismemberChance:
+									dismembered = True
+							elif damage_calc == sweep-3:
+								player_attack = sweep-3
+								print("Crappy Hit!")
+							else:
+								player_attack = damage_calc
+							boss_hp -= player_attack
+							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+						elif dodge <= 80:
+							print(f"{bossnames[boss_number]} dodged your attack!")
+						turnOver = True
 
 
-			elif action == 't' or action == 'talk':
-				# Player attempts to talk
-				success = random.random() < 0.15
-				if success:
-					print("You successfully talked your way out of the fight!")
-					break
-				else:
-					print("Your attempt to talk failed.")
+				if action == 'd' or action == 'defend':
+					# Player defends
+					print(f"You brace for {bossnames[boss_number]}'s attack.")
 					turnOver = True
 
 
-			elif action == 'h' or action == 'help':
-				print(f"inventory{inventory}")
-				for i in range(3):
-					print(f"{statnames[i]}:{stats[i]}")
+				elif action == 't' or action == 'talk':
+					if hasTalked == False:
+						# Player attempts to talk
+						success = random.random() < 0.15
+						if success:
+							if success <= 0.33:
+								print(f"You managed to convince {bossnames[boss_number]} thats they're fighting for an unjust cause.")
+							elif success <= 0.66:
+								print(f"You give {bossnames[boss_number]} a bite of one of your your. They love it!")
+							elif success <= 1:
+								print(f"You beat {bossnames[boss_number]} in a game of rock-paper-scissors. They are legaly required to give up.")
+							else:
+								print("You successfully talked your way out of a fight. Nice.")
+							break
+						else:
+							print(f"Your attempt to talk failed. Now {bossnames[boss_number]} really hates you.")
+							turnOver = True
+						hasTalked = True
+					else:
+						print(f"{bossnames[boss_number]} already hates you. Try something else.")
 
-			elif action == 'c' or action == 'choices':
-				print(choices)
-			
+
+				elif action == 'h' or action == 'help':
+					print(f"inventory{inventory}")
+					for i in range(3):
+						print(f"{statnames[i]}:{stats[i]}")
+
+				elif action == 'c' or action == 'choices':
+					print(choices)
+				
+		else:
+			print("You retrieve your sword, but you miss your attack as a result.")
 		print("")
 
 		# Boss attacks
+		if dismembered == True:
+			boss_attack-=(boss_attack/3)
+		if stunned <= 0:
+			if action == 'd':
+				# Player takes reduced damage when defending
+				if player_armor > 0:
+					player_armor -= int(boss_attack /2)
+					print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage! Your armor takes the hit!")
+				else:
+					player_hp -= int(boss_attack / 2)
+					print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage!")
 
-		if action == 'd':
-			# Player takes reduced damage when defending
-			if player_armor > 0:
-				player_armor -= int(boss_attack /2)
-				print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage! Your armor takes the hit!")
+
 			else:
-				player_hp -= int(boss_attack / 2)
-				print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage!")
-			stats[0] = player_hp
-			stats[2] = player_armor
-
+				if player_armor > 0:
+					player_armor -= boss_attack
+					print(f"{bossnames[boss_number]} hits you for {boss_attack} damage. Your armor takes the hit!")
+				else:
+					player_hp -= boss_attack
+					print(f"{bossnames[boss_number]} hits you for {boss_attack} damage!")
 		else:
-			if player_armor > 0:
-				player_armor -= boss_attack
-				print(f"{bossnames[boss_number]} hits you for {boss_attack} damage. Your armor takes the hit!")
-			else:
-				player_hp -= boss_attack
-				print(f"{bossnames[boss_number]} hits you for {boss_attack} damage!")
-			stats[0] = player_hp
-			stats[2] = player_armor
+			print(f"{bossnames[boss_number]} is still stunned!")
+		stats[0] = player_hp
+		stats[2] = player_armor
 		turnOver = False
 		if stabbed > 0:
 			stabbed-=1
@@ -147,7 +199,7 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 	elif boss_hp <= 0:
 		bossnames[boss_number] = "dead"
 		print(f"You have defeated {bossnames[boss_number]}!")
-		print("Your potion has been refilled!")
+		print("Your burger has been refilled!")
 		#REFILL POTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #boss_fight(stats[0], stats[2], 100, 20, 1, 0)
@@ -226,7 +278,7 @@ monsterRooms = ["false","false","false","false"]
 #maybe code multiple monster fights eventually
 for i in range(4):
 	placeholder = random.randint(1,5)
-	print(placeholder)
+	#print(placeholder)
 	##room 20
 	if placeholder == 1:
 		monsterRooms[0] = "true"
@@ -268,6 +320,10 @@ def bigbooty():
 		print(choices)
 	if choice == 'mon':
 		print(monsterRooms)
+
+for i in range(10):
+	testerre = random.randint(5-3,5+3)
+	print(testerre)
 while True:
 	if room == 10:
 		choices = "north, south, east, west, help, choices"
