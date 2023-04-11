@@ -11,8 +11,8 @@ choice = "PLACEHOLDER"
 #character stats
 #item variables
 
-intentory = ["torch","sword","armor","nothing","burger"]
-#inventory = ["torch","sword","armor","shield","burger"]
+#inventory = ["torch","sword","armor","nothing","burger"]
+inventory = ["torch","sword","armor","shield","burger"]
 #              0        1       2       3         4
 
 statnames = ["Health","Average Damage","Armor"]
@@ -25,28 +25,29 @@ burger = 100
 #when you get the sword make average damage stats[1] 15
 
 bossnames = ["north","south","east","west","Zomburger"]
+zomburger = [stats[0], stats[2], 80, 10, 4, 0]
 #monster types
 #zomburger: 80 hp, 10 damage, 4, 0
-defending = False
 
 
-#boss fight
-#https://gamedev.stackexchange.com/questions/128024/how-can-i-make-text-based-combat-more-engaging
+#BATTLE SYSTEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_defense):
 	print("I havent coded potions/burgers yet so it wont work")
 	choices = ["attack", "defend", "burger", "talk", "help","choices"]
 	turnOver = False
 	hasTalked = False
 	dismembered = False
+	defending = False
 	stabbed = 0
 	stunned = 0
-	bleeding = 0
+	bossBleeding = 0
+	playerBleeding = 0
 	while player_hp > 0 and boss_hp > 0:
 		if stabbed <= 0:
 			while turnOver == False:
-				# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ONINVENTORY!!!!!!!!!!!!
-				# make it so character can do multiple attacks with varying damage
-				# but boss has a chance to dodge these attacks
+				# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ON INVENTORY!!!!!!!!!!!!
+				#CODE BOSS DEFENSE!!!!!!
+				#AND PLAYER BLEEDING
 				# code burger
 				# make it so player can pick how much of the burger they want to use
 				if inventory[4] == "burger":
@@ -88,19 +89,24 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 					#High dodge chance = 80
 					#average dodge chance = 40
 					#low dodge chance = 20
+					#bleeding lasts 3 turns
+					#stabbed should equal two otherwise turn isnt missed
 					print("Attack Types:")
 					print("Big Sweep: An incredibly high damage and bloodletting attack with a somewhat high chance for the boss to dodge. Has a chance to cause dismemberment.")
 					print("Stab: A high damage and bloodletting attack which can't be dodged. However, you have a chance to miss your next turn.")
-					print("Quick Slice: An average attack with average damage. Low chance to be dodged.")
-					print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged.")
+					print("Quick Slice: An average attack with average damage. Low chance to be dodged. Causes bleeding on crit")
+					print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
 					print("Which attack would you like to do?")
 					attackChoice = input("Type: sweep, stab, slice, or bash.")
+
+					#sweep
 					if choice == "sweep":
 						dodge = random.randint(0,100)
-						if dodge > 80: 
+						if dodge >= 80: 
+							bossBleeding = 3
 							damage_calc = random.randint(sweep-3,sweep+3)
 							if damage_calc == sweep+3:
-								player_attack = sweep+2
+								player_attack = sweep+3
 								print("Critical Hit!")
 								dismemberChance = random.random() < 0.7
 								if dismemberChance:
@@ -109,17 +115,87 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 								player_attack = sweep-3
 								print("Crappy Hit!")
 							else:
+								if damage_calc >= sweep:
+									print("Great Hit!")
+								elif damge_calc < sweep:
+									print("Good Hit!")
 								player_attack = damage_calc
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
-						elif dodge <= 80:
+						elif dodge < 80:
 							print(f"{bossnames[boss_number]} dodged your attack!")
 						turnOver = True
 
+					#stab
+					if choice == "stab":
+						damage_calc = random.randint(stab-3,stab+3)
+						bossBleeding = 3
+						if damage_calc == stab+3:
+							player_attack = stab+5
+							print("Critical Hit!")
+						elif damage_calc == stab-3:
+							player_attack = stab-5
+							print("Crappy Hit!")
+						else:
+							if damage_calc >= stab:
+								print("Great Hit!")
+							elif damge_calc < stab:
+								print("Good Hit!")
+							player_attack = damage_calc
+						boss_hp -= player_attack
+						print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+						stabChance = random.random() < 0.5
+						if stabChance:
+							stabbed=2
+							print(f"Your sword got lodged in {bossnames[boss_number]}! You miss your next turn.")
+						turnOver = True
 
-				if action == 'd' or action == 'defend':
+					#slice
+					if choice == "slice":
+						damage_calc = random.randint(slice-3,slice+3)
+						dodge = random.randint(0,100)
+						if dodge >= 20:
+							if damage_calc == slice+3:
+								player_attack = slice+5
+								print("Critical Hit!")
+							elif damage_calc == slice-3:
+								player_attack = slice-5
+								print("Crappy Hit!")
+							else:
+								if damage_calc >= slice:
+									print("Great Hit!")
+								elif damge_calc < slice:
+									print("Good Hit!")
+								player_attack = damage_calc
+							boss_hp -= player_attack
+							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+						elif dodge < 20:
+							print(f"{bossnames[boss_number]} dodged your attack!")
+						turnOver = True
+
+					#bash
+					if choice == "bash":
+						dodge = random.randint(0,100)
+						if dodge >= 40:
+							print("Great Hit!")
+							player_attack = damage_calc
+							boss_hp -= player_attack
+							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+							stunned = 1
+							print(f"{bossnames[boss_number]} is stunned! {bossnames[boss_number]} misses their next turn.")
+						elif dodge < 40:
+							print(f"{bossnames[boss_number]} dodged your attack!")
+							bestOffence = random.randint(0,100)
+							if bestOffence <= 55:
+								print("Even though you missed your attack, you ready your guard!")
+								defending = True
+						turnOver = True
+
+
+				elif action == 'd' or action == 'defend':
 					# Player defends
 					print(f"You brace for {bossnames[boss_number]}'s attack.")
+					defending = True
 					turnOver = True
 
 
@@ -161,7 +237,7 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 		if dismembered == True:
 			boss_attack-=(boss_attack/3)
 		if stunned <= 0:
-			if action == 'd':
+			if defending == True:
 				# Player takes reduced damage when defending
 				if player_armor > 0:
 					player_armor -= int(boss_attack /2)
@@ -169,6 +245,7 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 				else:
 					player_hp -= int(boss_attack / 2)
 					print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage!")
+				defending = False
 
 
 			else:
@@ -187,8 +264,10 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 			stabbed-=1
 		if stunned > 0:
 			stunned-=1
-		if bleeding > 0:
-			bleeding-=1
+		if bossBleeding > 0:
+			bossBleeding-=1
+			boss_hp-=6
+			print(f"{bossnames[boss_number]} took 6 damage from bleeding!")
 		print("")
 		print(f"Your HP: {player_hp}")
 		print(f"Boss HP: {boss_hp}")
@@ -321,9 +400,6 @@ def bigbooty():
 	if choice == 'mon':
 		print(monsterRooms)
 
-for i in range(10):
-	testerre = random.randint(5-3,5+3)
-	print(testerre)
 while True:
 	if room == 10:
 		choices = "north, south, east, west, help, choices"
@@ -339,7 +415,7 @@ while True:
 	if room == 20:
 		if monsterRooms[0] == "true":
 			print("a thaiuyadw attacks")
-			boss_fight(stats[0], stats[2], 80, 10, 4, 0)
+			boss_fight(zomburger[0],zomburger[1],zomburger[2],zomburger[3],zomburger[4],zomburger[5])
 		print("You are in a dark, damp hallway.")
 		choice = input("")
 		bigbooty()
