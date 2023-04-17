@@ -11,9 +11,11 @@ choice = "PLACEHOLDER"
 #character stats
 #item variables
 
-#inventory = ["torch","sword","armor","nothing","burger"]
-inventory = ["torch","sword","armor","shield","burger"]
-#              0        1       2       3         4
+#inventory = ["torch","sword","armor","nothing","burger","key piece"]
+inventory = ["torch","sword","armor","shield","burger","nothing"]
+#              0        1       2       3         4        5
+keypieces = 0
+#MAKE BOSS ROOMS
 
 statnames = ["Health","Average Damage","Armor"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
@@ -234,6 +236,7 @@ def boss_fight(player_hp, player_armor, boss_hp, boss_attack, boss_number, boss_
 		print("")
 
 		# Boss attacks
+		#CODE BOSS DEFENSE!!!
 		if dismembered == True:
 			boss_attack-=(boss_attack/3)
 		if stunned <= 0:
