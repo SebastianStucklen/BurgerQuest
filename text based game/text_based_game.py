@@ -1,7 +1,7 @@
 import random
 import time as t
 def pause():
-    programPause = input("Press the <ENTER> key to continue...")
+	programPause = input("Press the <ENTER> key to continue...")
 
 #other things
 
@@ -12,8 +12,10 @@ choice = "PLACEHOLDER"
 #item variables
 
 #inventory = ["torch","sword","armor","nothing","burger","key piece"]
-inventory = ["torch","sword","armor","shield","burger","nothing"]
+
+inventory = ["torch","sword","armor","shield","burgerss","nothing"]
 #              0        1       2       3         4        5
+
 keypieces = 0
 #MAKE BOSS ROOMS
 attackTypes = ["sweep","stab","slice","bash"]
@@ -26,10 +28,16 @@ stats = [100, 7 , 0, 0 , 100]
 #when you get the sword make average damage stats[1] 15
 
 bossnames = ["north","south","east","west","Zomburger"]
-zomburger = [ 80, 10, 4, 0]
+zomburger = [80, 10, 4, 0]
 #monster types
 #zomburger: 80 hp, 10 damage, number: 4, 0 defense
 
+
+def search_item(list, item):
+    for i in range(len(list)):
+        if list[i] == item:
+            return True
+    return False
 
 #BATTLE SYSTEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
@@ -55,20 +63,20 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 				#AND PLAYER BLEEDING
 				# code burger
 				# make it so player can pick how much of the burger they want to use
-				if inventory[4] == "burger":
-					if inventory[3] == "shield":
+				if search_item(inventory, "burger"):
+					if search_item(inventory, "shield"):
 						print("Enter 'attack' to attack, 'defend' to defend, 'burger'to use a burger, or 'talk' to talk: ")
 						print("Or type 'help' for stats or 'choices' for choices")
-					if inventory[3] != "shield":
+					else:
 						print("Enter 'attack' to attack, 'burger' to use burger, or 'talk' to talk: ")
 						print("Or type 'help' for stats or 'choices' for choices")
 						choices[1] = "nothing"
-				if inventory[4] != "burger":
+				else:
 					choices[2] = "nothing"
-					if inventory[3] == "shield":
+					if search_item(inventory, "shield"):
 						print("Enter 'attack' to attack, 'defend' to defend, or 'talk' to talk: ")
 						print("Or type 'help' for stats or 'choices' for choices")
-					if inventory[3] != "shield":
+					else:
 						print("Enter 'attack' to attack, or 'talk' to talk: ")
 						print("Or type 'help' for stats or 'choices' for choices")
 						choices[1] = "nothing"
@@ -245,13 +253,13 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 					print("BurgerHealth depletes twice as fast.")
 					print("How much of your burger do you want to eat")
 					#stats[4] = burgerPercent
-					burgerAmount = input("")
+					burgerAmount = int(input(""))
 					if burgerAmount > burgerPercent:
 						print("You dont even have that much burger!")
 					elif burgerAmount <= 0:
 						print("You cant eat that little burgers!")
 					elif burgerAmount>0:
-						print(f"You eat {burgerAmount} burgers")
+						print(f"You eat {burgerAmount}% burgers")
 						burgerPercent-=burgerAmount
 						stats[4]=burgerPercent
 						burgerAmount=int(burgerAmount/2)
@@ -432,6 +440,12 @@ def bigbooty():
 		print(choices)
 	if choice == 'mon':
 		print(monsterRooms)
+	if choice == 'fight':
+		bhp = int(input("Boss HP:"))
+		ba = int(input("Boss Attack:"))
+		bn = int(input("Boss number:"))
+		bd = int(input("Boss defense:"))
+		boss_fight( boss_hp, boss_attack, boss_number, boss_defense)
 
 while True:
 	if room == 10:
