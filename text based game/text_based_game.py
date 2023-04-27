@@ -20,9 +20,14 @@ keypieces = 0
 #MAKE BOSS ROOMS
 attackTypes = ["sweep","stab","slice","bash"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
-
+health = 100
+averageDamage = 100
+armor = 0
+burgerBux = 0
+burgerP = 100
 statnames = ["Health","Average Damage","Armor","BurgerBux","Burger%"]
 stats = [100, 7 , 0, 0 , 100]
+
 
 #each burger heals 100
 #when you get the sword make average damage stats[1] 15
