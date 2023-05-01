@@ -2,6 +2,7 @@ import random
 import time as t
 def pause():
 	programPause = input("Press the <ENTER> key to continue...")
+	print("")
 
 #other things
 
@@ -12,8 +13,8 @@ choice = "PLACEHOLDER"
 #item variables
 
 #inventory = ["torch","sword","armor","nothing","burger","key piece"]
-
-inventory = ["torch","sword","armor","shield","burgerss","nothing"]
+itemNames = ["Grease Torch","Fry Sword","Burger Bun Armor","Pickle Shield","Burger","Key Piece"]
+inventory = ["torch","sword","armor","shield","burger","nothing"]
 #              0        1       2       3         4        5
 
 keypieces = 0
@@ -21,22 +22,29 @@ keypieces = 0
 attackTypes = ["sweep","stab","slice","bash"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
 health = 100
-averageDamage = 100
+averageDamage = 7
 armor = 0
 burgerBux = 0
 burgerP = 100
 statnames = ["Health","Average Damage","Armor","BurgerBux","Burger%"]
-stats = [100, 7 , 0, 0 , 100]
+stats = [health, averageDamage , armor, burgerBux , burgerP]
 
 
 #each burger heals 100
 #when you get the sword make average damage stats[1] 15
 
-bossnames = ["north","south","east","west","Zomburger"]
-zomburger = [80, 10, 4, 0]
+bossnames = ["Phil W. Frencherfrie","south","east","west","Zomburger"]
+zomburger = [80, 10, 4]
 #monster types
-#zomburger: 80 hp, 10 damage, number: 4, 0 defense
-
+#zomburger: 80 hp, 10 average damage, number: 4
+phil = []
+def help():
+	print(f"inventory: {itemNames}")
+	
+	varkle = len(statnames)
+	varble = len(stats)
+	for i in range(varkle):
+		print(f"{statnames[i]}: {stats[i]}")
 
 def search_item(list, item):
     for i in range(len(list)):
@@ -45,10 +53,11 @@ def search_item(list, item):
     return False
 
 #BATTLE SYSTEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
+def boss_fight(boss_hp, boss_attack, boss_number):
 	player_hp = stats[0]
 	player_armor = stats[2]
 	burgerPercent = stats[4]
+	bossDamage = boss_attack
 	#print("I havent coded potions/burgers yet so it wont work")
 	choices = ["attack", "defend", "burger", "talk", "help","choices"]
 	turnOver = False
@@ -56,18 +65,21 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 	hasTalked = False
 	dismembered = False
 	defending = False
+	attackCharging = False
 	stabbed = 0
 	stunned = 0
 	bossBleeding = 0
-	playerBleeding = 0
+	playerPoisoned = 0
+	
+	print(f"Your HP: {player_hp}")
+	print(f"{bossnames[boss_number]}'s HP: {boss_hp}")
+	print("")
 	while player_hp > 0 and boss_hp > 0:
 		if stabbed <= 0:
 			while turnOver == False:
 				# Player turn ADD DIFFERENT PRINTS and CHOICES DEPENDING ON INVENTORY!!!!!!!!!!!!
 				#CODE BOSS DEFENSE!!!!!!
 				#AND PLAYER BLEEDING
-				# code burger
-				# make it so player can pick how much of the burger they want to use
 				if search_item(inventory, "burger"):
 					if search_item(inventory, "shield"):
 						print("Enter 'attack' to attack, 'defend' to defend, 'burger'to use a burger, or 'talk' to talk: ")
@@ -90,7 +102,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 				print("")
 
 
-				if action == 'a' or action == 'attack':
+				if action == 'attack':
 					#attackTypes = ["sweep","stab","slice","bash"]
 					sweep = stats[1] + 10
 					stab = stats[1] + 5
@@ -110,19 +122,22 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 					#bleeding lasts 3 turns
 					#stabbed should equal two otherwise turn isnt missed
 					if viewedAttacks == False:
+						viewedAttacks = True
 						print("Attack Types:")
-						print("Big Sweep: An incredibly high damage and bloodletting attack with a somewhat high chance for the boss to dodge. Has a chance to cause dismemberment.")
-						print("Stab: A high damage and bloodletting attack which can't be dodged. However, you have a chance to miss your next turn.")
-						print("Quick Slice: An average attack with average damage. Low chance to be dodged. Causes bleeding on crit")
-						print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
+						print("Slider Sweep: An incredibly high damage and bloodletting attack with a somewhat high chance for the boss to dodge. Has a chance to cause dismemberment.")
+						print("Toothpick Stab: A high damage and bloodletting attack which can't be dodged. However, you have a chance to miss your next turn.")
+						print("Quickle Pickle Slice: An average attack with average damage. Low chance to be dodged. Causes bleeding on crit")
+						if search_item(inventory, "shield"):
+							print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
+						pause()
 						print("Which attack would you like to do?")
 					attackChoice = input("Type: 'sweep', 'stab', 'slice', or 'bash'. Or type 'choices' to view what each attack means.")
-
+					print("")
 					#sweep
 					if attackChoice == "sweep":
 						viewedAttacks = True
 						dodge = random.randint(0,100)
-						if dodge >= 80: 
+						if dodge >= 60: 
 							bossBleeding = 3
 							damage_calc = random.randint(sweep-3,sweep+3)
 							if damage_calc == sweep+3:
@@ -142,7 +157,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 								player_attack = damage_calc
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
-						elif dodge < 80:
+						else:
 							print(f"{bossnames[boss_number]} dodged your attack!")
 						turnOver = True
 
@@ -168,7 +183,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 						stabChance = random.random() < 0.5
 						if stabChance:
 							stabbed=2
-							print(f"Your sword got lodged in {bossnames[boss_number]}! You miss your next turn.")
+							print(f"Your {itemNames[1]} got lodged in {bossnames[boss_number]}! You miss your next turn.")
 						turnOver = True
 
 					#slice
@@ -200,7 +215,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 						dodge = random.randint(0,100)
 						if dodge >= 40:
 							print("Great Hit!")
-							player_attack = damage_calc
+							player_attack = 3
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
 							stunned = 1
@@ -220,26 +235,27 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 						print("Quick Slice: An average attack with average damage. Low chance to be dodged. Causes bleeding on crit")
 						print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
 						print("Which attack would you like to do?")
-						viewviewedAttacks = True
+						viewedAttacks = True
 
 
-				elif action == 'd' or action == 'defend':
+				elif action == 'defend':
 					# Player defends
 					print(f"You brace for {bossnames[boss_number]}'s attack.")
 					defending = True
 					turnOver = True
 
 
-				elif action == 't' or action == 'talk':
+				elif action == 'talk':
 					if hasTalked == False:
 						# Player attempts to talk
-						success = random.random() < 0.15
+						success = random.random() < 0.12
 						if success:
-							if success <= 0.33:
+							successMessage = random.random()
+							if successMessage <= 0.33:
 								print(f"You managed to convince {bossnames[boss_number]} thats they're fighting for an unjust cause.")
-							elif success <= 0.66:
+							elif successMessage <= 0.66:
 								print(f"You give {bossnames[boss_number]} a bite of one of your your. They love it!")
-							elif success <= 1:
+							elif successMessage <= 1:
 								print(f"You beat {bossnames[boss_number]} in a game of rock-paper-scissors. They are legaly required to give up.")
 							else:
 								print("You successfully talked your way out of a fight. Nice.")
@@ -251,7 +267,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 					else:
 						print(f"{bossnames[boss_number]} already hates you. Try something else.")
 
-				elif action == 'b' or action == 'burger':
+				elif action == 'burger':
 					print(f"{statnames[4]}: {burgerPercent}")
 					print("2% of a burger heals for 1 hp.")
 					print("Hint: Eating more burger than needed to fill up your health to 100 will give you BurgerHealth")
@@ -269,55 +285,89 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 						stats[4]=burgerPercent
 						burgerAmount=int(burgerAmount/2)
 						player_hp+=burgerAmount
-				elif action == 'h' or action == 'help':
-					print(f"inventory{inventory}")
-					for i in range(5):
-						print(f"{statnames[i]}:{stats[i]}")
+				elif action == 'help':
+					help()
 
-				elif action == 'c' or action == 'choices':
+				elif action == 'choices':
 					print(choices)
 				
 		else:
-			print("You retrieve your sword, but you miss your attack as a result.")
+			print("")
+			print(f"You retrieve your {itemNames[1]}, but you miss your attack as a result.")
 		print("")
 
 		# Boss attacks
 		#CODE BOSS DEFENSE!!!
+		#ALSO CODE DIFFERENT BOSS ATTACK
+		#bossnames = ["Phil W. Frencherfrie","south","east","west","Zomburger"]
+		
+		if attackCharging == False:
+			attackTypeBoss = random.random()
+			if boss_number == 0:
+				#phil
+				if attackTypeBoss <= 0.80:
+					bossDamage = random.randint(boss_attack-1,boss_attack+1)
+					print("Phil swings his Burger Buster Sword!")
+				else:
+					print("Phil readies his Condiment Beam!!! However, he is unable to attack while charging.")
+					bossDamage = random.randint(boss_attack, boss_attack+5)
+					stunned = 1
+					attackCharging = True
+			if boss_number == 4:
+				#zomburger
+				if attackTypeBoss <= 0.80:
+					bossDamage = random.randint(boss_attack-1,boss_attack+1)
+			else:
+				bossDamage = boss_attack
 		if dismembered == True:
-			boss_attack-=int(boss_attack/3)
+			bossDamage-=int(bossDamage/3)
 		if stunned <= 0:
 			if defending == True:
 				# Player takes reduced damage when defending
 				if player_armor > 0:
-					player_armor -= int(boss_attack /2)
-					print(f"{bossnames[boss_number]} hits you for{int (boss_attack / 2)} damage! Your armor takes the hit!")
+					damage_taken = int(bossDamage /2)
+					player_armor -= damage_taken
+					bossAttackTypes("BossNumber")
+					print(f"{bossnames[boss_number]} hits you for {damage_taken} damage! Your armor takes the hit!")
 				else:
 					if player_hp > 100:
-						player_hp -= int(boss_attack*(2/3))
+						#with burgerhealth
+						damage_taken = int(bossDamage)
+						player_hp -= damage_taken
 						print(f"You have {int(player_hp-100)} BurgerHealth!")
-						print(f"{bossnames[boss_number]} hits you for{int(boss_attack*(2/3))} damage!")
+						print(f"{bossnames[boss_number]} hits you for {damage_taken} damage!")
 						if player_hp < 100:
 							player_hp+=int((100-player_hp)/2)
+					else:
+						print(f"{bossnames[boss_number]} hits you for {int (bossDamage / 2)} damage!")
 				defending = False
 
 
 			else:
 				if player_armor > 0:
-					player_armor -= boss_attack
-					print(f"{bossnames[boss_number]} hits you for {boss_attack} damage. Your armor takes the hit!")
+					damage_taken = int(bossDamage)
+					player_armor -= damage_taken
+					print(f"{bossnames[boss_number]} hits you for {damage_taken} damage. Your armor takes the hit!")
 					stats[2] = player_armor
 				else:
-					player_hp -= int(boss_attack)
-					print(f"You have {int(player_hp-100)} BurgerHealth!")
-					print(f"{bossnames[boss_number]} hits you for{int (boss_attack)} damage!")
-					if player_hp < 100:
-						player_hp+=int((100-player_hp)/2)
+					if player_hp > 100:
+						damage_taken = int(bossDamage*2)
+						player_hp-=damage_taken
+						print(f"You have {int(player_hp-100)} BurgerHealth!")
+						print(f"{bossnames[boss_number]} hits you for {damage_taken} damage!")
+						if player_hp < 100:
+							player_hp+=int((100-player_hp)/2)
+					else:
+						damage_taken = int(bossDamage)
+						player_hp-=damage_taken
+						print(f"{bossnames[boss_number]} hits you for {damage_taken} damage!")
 		else:
 			print(f"{bossnames[boss_number]} is still stunned!")
 		stats[0] = player_hp
 		stats[2] = player_armor
 		stats[4] = burgerPercent
 		turnOver = False
+		attackCharging = True
 		if stabbed > 0:
 			stabbed-=1
 		if stunned > 0:
@@ -326,6 +376,9 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 			bossBleeding-=1
 			boss_hp-=6
 			print(f"{bossnames[boss_number]} took 6 damage from bleeding!")
+		if playerPoisoned > 0:
+			playerPoisoned-=1
+			player_hp-=6
 		print("")
 		print(f"Your HP: {player_hp}")
 		print(f"Boss HP: {boss_hp}")
@@ -334,8 +387,9 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 		stats[0] = 0
 		print(f"You have been defeated by {bossnames[boss_number]}.")
 	elif boss_hp <= 0:
-		bossnames[boss_number] = "dead"
+		
 		print(f"You have defeated {bossnames[boss_number]}!")
+		bossnames[boss_number] = "dead"
 		if stats[4] < 100:
 			print("Your burger has been refilled!")
 		coinDrop = random.randint(0,101)
@@ -348,7 +402,7 @@ def boss_fight( boss_hp, boss_attack, boss_number, boss_defense):
 skipintro = input("skip intro? y/n")
 
 #intro
-if skipintro == 'n':
+if skipintro != 'y':
 	print('')
 	print("welcome to BurgerQuest")
 	print('')
@@ -398,16 +452,21 @@ if skipintro == 'n':
 	pause()
 
 
-skiptutorial = input("skip tutorial? y/n")
+print('')
+print('')
+print('!!!!!')
+print("IMPORTANT TUTORIAL and cool tips PLEASE READ:")
+print('')
+print("you can type 'help' at any time to view your inventory and stats")
+print("you can also type 'choices' at any time to view your choices")
+print("you can ALSO type 'inventory' to inspect your inventory items.")
+print('')
+print("TIP: Type 'choices' every time you enter a new room/environment. This can be very helpful(unless if youre a true burgergamer).")
+print('')
+print('!!!!!')
+print('')
+print('')
 
-if skiptutorial == 'n':
-	print('')
-	print('')
-	print('')
-	print("IMPORTANT tutorial PLEASE READ:")
-	print("when entering your options, you can either enter the full choice or just the first letter")
-	print("you can type help at any time to view your inventory and stats")
-	print("you can also type choices at any time to view your choices")
 
 #this is for the random monster encounters
 monsterRooms = ["false","false","false","false"]
@@ -417,40 +476,39 @@ monsterRooms = ["false","false","false","false"]
 #4,8,12 is room 50
 #maybe code multiple monster fights eventually
 for i in range(4):
-	placeholder = random.randint(1,5)
+	monChance = random.randint(1,5)
 	#print(placeholder)
 	##room 20
-	if placeholder == 1:
+	if monChance == 1:
 		monsterRooms[0] = "true"
 	##room 30
-	if placeholder == 2:
+	if monChance == 2:
 		monsterRooms[1] = "true"
 	##room 40
-	if placeholder == 3:
+	if monChance == 3:
 		monsterRooms[2] = "true"
 	##room 50
-	if placeholder == 4:
+	if monChance == 4:
 		monsterRooms[3] = "true"
-	dropskeypiece = random.randint(1,5)
-def help():
-	print(f"inventory{inventory}")
-	for i in range(5):
-		print(f"{statnames[i]}:{stats[i]}")
 
 
 def bigbooty():
-	if choice == 'help' or choice == 'h':
+	if choice == 'help':
 		help()
-	if choice == 'choices' or choice == 'c':
+	if choice == 'choices':
 		print(choices)
 	if choice == 'mon':
 		print(monsterRooms)
 	if choice == 'fight':
-		bhp = int(input("Boss HP:"))
-		ba = int(input("Boss Attack:"))
-		bn = int(input("Boss number:"))
-		bd = int(input("Boss defense:"))
-		boss_fight( boss_hp, boss_attack, boss_number, boss_defense)
+		fightChoice = input("custom or set fight")
+		if fightChoice == "custom":
+			bhp = int(input("Boss HP:"))
+			ba = int(input("Boss Attack:"))
+			bn = int(input("Boss number:"))
+			boss_fight( bhp, ba, bn,)
+		if fightChoice == "set":
+			boss_fight(zomburger[0],zomburger[1],zomburger[2])
+	print("")
 
 while True:
 	if room == 10:
@@ -459,42 +517,70 @@ while True:
 		print(" There are four doors to north, east, south, and west respectively.")
 		choice = input("")
 		bigbooty()
+
 		if choice == 'break' or choice == 'quit':
 			break
-		if choice == 'north' or choice == 'n':
+		if choice == 'north':
 			room = 20
 
 	if room == 20:
 		if monsterRooms[0] == "true":
 			print("a thaiuyadw attacks")
-			boss_fight(zomburger[0],zomburger[1],zomburger[2],zomburger[3])
+			boss_fight(zomburger[0],zomburger[1],zomburger[2])
 
-		print("You are in a dark, damp hallway.")
+		choices = "north, south, east, door, help, choices"
+		print("You are in a dark, damp hallway. There is a very cool door to the east. To the north lies a very large door made with a strange red wood. or its just painted. A comically large golden burger shaped lock adorns the face of the door..")
 		choice = input("")
 		bigbooty()
 		if choice == 'break' or choice == 'quit':
 			break
+		if choice == 'north' or choice == 'door':
+			if keypieces == 4:
+				#unlock door and enter boss room
+				print("You approach the door. With the power of burger magic, the 4 key pieces fuse together.")
+				print("The key has a beautiful golden burger-shaped emblem, with ruby gems the color of fine ketchup.")
+				room = 23
+			else:
+				choices = "inspect, open, back, help, choices"
+				print("A faint smell of rancid ketchup wafts through the cracks in the door.")
+				choice = input("")
+				bigbooty()
+				if choice == 'inspect':
+					print("You peer through the cracks in the door The other side is dark so you can't see anything.")
+				if choice == 'open':
+					print("You check the burgerlock(tm) lock on the door. its locked.")
+				if choice == 'back':
+					choice = "placeholder"
 	if room == 21:
 		#shield
 		choice = input("")
+		bigbooty()
 	monRoom = False
 	if room == 22:
 		#monster fight room (secret)
 		monRoom = True
-		choice = input("")
+		bhp = int(input("Boss HP:"))
+		ba = int(input("Boss Attack:"))
+		bn = int(input("Boss number:"))
+		boss_fight( bhp, ba, bn)
 	if room == 23:
 		#final boss room
 		#locked (4 keys needed
 		choice = input("")
+		bigbooty()
 	if room == 24:
 		choice = input("")
+		bigbooty()
 	if room == 30:
 		choice = input("")
+		bigbooty()
 	if room == 31:
 		#shop room
 		choice = input("")
+		bigbooty()
 	if room == 32:
 		choice = input("")
+		bigbooty()
 	if stats[0] <= 0:
 		if monRoom != True:
 			break
