@@ -3,7 +3,8 @@ import time as t
 def pause():
 	programPause = input("Press the <ENTER> key to continue...")
 	print("")
-
+#https://www.geeksforgeeks.org/play-sound-in-python/#
+#PLAY SPUIND FEFFEFTT
 #other things
 
 room = 10
@@ -567,7 +568,7 @@ def bigbooty():
 
 while True:
 	if room == 10:
-		choices = "north, south, east, west, help, choices"
+		choices = "north, west, east, south, help, choices"
 		print("You are in a grand hall.")
 		print(" There are four doors to north, east, south, and west respectively.")
 		choice = input("")
@@ -577,6 +578,12 @@ while True:
 			break
 		if choice == 'north':
 			room = 20
+		if choice == 'west':
+			room = 30
+		if choice == 'east':
+			room = 40
+		if choice == 'south':
+			room = 50
 
 	if room == 20:
 		if monsterRooms[0] == "true":
@@ -615,8 +622,7 @@ while True:
 			room = 21
 		if choice == 'south':
 			room = 10
-	if room == 21:
-		#shield
+	if room == 21: #shield
 		choices = "west, chest, open"
 		if search_item(inventory,"shield"):
 			print("The room is dark because you already opened the chest you doofus.")
@@ -633,29 +639,27 @@ while True:
 				print(f"You open the chest. Inside the chest lies a {itemNames[shieldN]}!")
 				inventory[shieldN] = "shield"
 	monRoom = False
-	if room == 22:
-		#monster fight room (secret)
+	if room == 22: #monster fight room (secret)
 		monRoom = True
 		bhp = int(input("Boss HP:"))
 		ba = int(input("Boss Attack:"))
 		bn = int(input("Boss number:"))
 		boss_fight( bhp, ba, bn)
-	if room == 23:
-		#final boss room
+	if room == 23: #final boss room
 		#locked (4 keys needed
 		choice = input("")
 		bigbooty()
 	if room == 24:
 		choice = input("")
 		bigbooty()
-	if room == 30:
+	if room == 30: #puzzle
+		choices = ''
 		choice = input("")
 		bigbooty()
-	if room == 31:
-		#shop room
+	if room == 31: #shop room
 		choice = input("")
 		bigbooty()
-	if room == 32:
+	if room == 32: #boss
 		choice = input("")
 		bigbooty()
 	if stats[Health] <= 0:
