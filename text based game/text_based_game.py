@@ -1,15 +1,21 @@
 import random
 import time as t
 def pause():
+	print("")
 	programPause = input("Press the <ENTER> key to continue...")
 	print("")
 #https://www.geeksforgeeks.org/play-sound-in-python/#
 #PLAY SPUIND FEFFEFTT
 #other things
 
+ 
+
 room = 10
 choice = "PLACEHOLDER"
-
+lost = False
+won = False
+vineBurn = False
+boughtKey = False
 #character stats
 #item variables
 
@@ -49,9 +55,10 @@ BurgerP = 4
 def healthRand(a,b):
 	eichpee = random.randint(a,b)
 	return eichpee
-bossnames = ["Phil W. Frencherfrie","Patty Clown Kidnapper","Mouse with Sewing Needle","Evil Cup of Water","Zomburger","Cheese Cat-Slime"]
+bossnames = ["Phil W. Frencherfrie","Patty Clown Kidnapper","Mouse with Sewing Needle","Really Big Cheese Cat-Slime","Zomburger","Cheese Cat-Slime"]
 zomburger = [healthRand(70,90), 10, 4]
 slime = [healthRand(30,50),20,5]
+bigSlime = [healthRand(80,110), 30, 3]
 #bosses
 patty = [200,15,1]
 rat = [300,5,2]
@@ -119,7 +126,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						print("Or type 'help' for stats or 'choices' for choices")
 						choices[1] = "nothing"
 
-				action = input("")
+				action = input("> ")
 				print("")
 
 				#attack
@@ -154,10 +161,10 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						print("")
 						if search_item(inventory, "shield"):
 							print("Shield Bash: A low damage attack that causes the boss to lose their turn. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
-						print("")
 						pause()
 						print("Which attack would you like to do?")
-					attackChoice = input("Type: 'sweep', 'stab', 'slice', or 'bash'. Or type 'choices' to view what each attack means.")
+					print("Type: 'sweep', 'stab', 'slice', or 'bash'. Or type 'choices' to view what each attack means.")
+					attackChoice = input("> ")
 					print("")
 					#sweep
 					if attackChoice == "sweep":
@@ -311,7 +318,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 					print("Hint: Eating more burger than needed to fill up your health to 100 will give you BurgerHealth")
 					print("BurgerHealth depletes twice as fast.")
 					print("How much of your burger do you want to eat")
-					burgerAmount = int(input(""))
+					burgerAmount = int(input("> "))
 					if burgerAmount > burgerPercent:
 						print("You dont even have that much burger!")
 					elif burgerAmount <= 0:
@@ -353,12 +360,24 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 					bossDamage = random.randint(boss_attack, boss_attack+5)
 					stunned = 1
 					attackCharging = True
-			if boss_number == 4:
-				#zomburger
-				if attackTypeBoss <= 0.80:
-					bossDamage = random.randint(boss_attack-1,boss_attack+1)
 			else:
-				bossDamage = boss_attack
+				bossDamage = random.randint(boss_attack-2,boss_attack+2)
+				if attackTypeBoss <= 0.20:
+					attackword = "swipes"
+				elif attackTypeBoss <= 0.40:
+					attackword = "swings"
+				elif attackTypeBoss <= 0.60:
+					attackword = "pounces"
+				elif attackTypeBoss <= 0.80:
+					attackword = "strikes"
+				else:
+					print(f"{bossnames[boss_number]} charges a strong attack at you. However, they is unable to attack while charging.")
+					bossDamage = random.randint(boss_attack, boss_attack+5)
+					stunned = 1
+					attackCharging = True
+				if attackCharging != True:
+					print(f"{bossnames[boss_number]} swipes at you")
+
 		if dismembered == True:
 			bossDamage-=int(bossDamage/3)
 		if stunned <= 0:
@@ -447,63 +466,51 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 		bossnames[boss_number] = "dead"
 		if stats[BurgerP] < 100:
 			print("Your burger has been refilled!")
-		coinDrop = random.randint(0,101)
+		coinDrop = random.randint(80,250)
 		print(f"You got {coinDrop} BurgerBux!")
+		stats[burgerBux] += coinDrop
 		
 		#REFILL POTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #help
 
-skipintro = input("skip intro? y/n")
+print("skip intro?")
+print("y/n")
+skipintro = input("> ")
 
 #intro
 if skipintro != 'y':
 	print('')
 	print("welcome to BurgerQuest")
-	print('')
 	pause()
 	print("Our main character is Stephen H. Burgerguy, a burger shop owner and chef.")
-	print('')
 	pause()
 	print("Stephen was a normal guy, flipping burgers and cooking burgers and eating burgers")
-	print('')
 	pause()
 	print("Until one day, that all changed.")
-	print('')
 	pause()
 	print("A jerkhole customer decided to complain about Stephens flawless burgers!!!")
-	print('')
 	pause()
 	print('"There is no sauce on my burger!!!" the Karen blabbed, completely oblivius to the fact that you put the sauce on the burger yourself.')
 	print("(what an idiot, am i right?)")
-	print('')
 	pause()
 	print("After this incident, annoying customers started showing up week after week,")
-	print('')
 	pause()
 	print("day by day,")
-	print('')
 	pause()
 	print("hour by hour,")
-	print('')
 	pause()
 	print("minute by minute.")
-	print('')
 	pause()
 	print("Burgerguy grew tired of these annoying customers.")
-	print('')
 	pause()
 	print("Stephen did some research (on twitter), and it turned out that he had been cursed by the evil BurgerKing,	who resides within a burger dungeon!")
-	print('')
 	pause()
 	print("The Burger King was mad that Stephen's burgers were better than his (what a jerk).")
-	print('')
 	pause()
 	print("So, Stephen, with his trusty sword (that he bought off craigslist), enters the dungeon to take the Burger King on")
-	print('')
 	pause()
 	print("So begins, BurgerQuest")
-	print('')
 	pause()
 
 #tutorial
@@ -520,7 +527,6 @@ for i in range(1):
 	print("TIP: Type 'choices' every time you enter a new room/environment. This can be very helpful(unless if youre a true burgergamer).")
 	print('')
 	print('!!!!!')
-	print('')
 	print('')
 	pause()
 
@@ -556,7 +562,8 @@ def bigbooty():
 	if choice == 'mon':
 		print(monsterRooms)
 	if choice == 'fight':
-		fightChoice = input("custom or set fight")
+		print("custom or set fight")
+		fightChoice = input("> ")
 		if fightChoice == "custom":
 			bhp = int(input("Boss HP:"))
 			ba = int(input("Boss Attack:"))
@@ -565,15 +572,18 @@ def bigbooty():
 		if fightChoice == "set":
 			boss_fight(zomburger[0],zomburger[1],zomburger[2])
 	print("")
+	
 
 while True:
 	if room == 10:
 		choices = "north, west, east, south, help, choices"
 		print("You are in a grand hall.")
 		print(" There are four doors to north, east, south, and west respectively.")
-		choice = input("")
+		choice = input("> ")
 		bigbooty()
-
+		if choice == 'room':
+			roomPick = int(input("which room would you like to go to: "))
+			room = roomPick
 		if choice == 'break' or choice == 'quit':
 			break
 		if choice == 'north':
@@ -586,6 +596,7 @@ while True:
 			room = 50
 
 	if room == 20:
+		#prev room = 10
 		if monsterRooms[0] == "true":
 			monChance = random.random()
 			if monChance <= 0.5:
@@ -597,7 +608,7 @@ while True:
 
 		choices = "north, south, east, door, help, choices"
 		print("You are in a dark, damp hallway. There is a very cool looking door to the east. To the north lies a very large door made with a strange red wood. or its just painted. A comically large golden burger shaped lock adorns the face of the door.")
-		choice = input("")
+		choice = input("> ")
 		bigbooty()
 		if choice == 'break' or choice == 'quit':
 			break
@@ -622,13 +633,15 @@ while True:
 			room = 21
 		if choice == 'south':
 			room = 10
+	#shield
 	if room == 21: #shield
+		#prev room = 20
 		choices = "west, chest, open"
 		if search_item(inventory,"shield"):
 			print("The room is dark because you already opened the chest you doofus.")
 		else:
 			print("You enter a very dark room. There is a spotlight on the ceiling, aiming directly down at a very cool looking chest. You can't see anything else.")
-		choice = input("")
+		choice = input("> ")
 		bigbooty()
 		if choice == 'west':
 			room = 20
@@ -645,31 +658,440 @@ while True:
 		ba = int(input("Boss Attack:"))
 		bn = int(input("Boss number:"))
 		boss_fight( bhp, ba, bn)
+	#final boss
 	if room == 23: #final boss room
-		#locked (4 keys needed
+		#locked (4 keys needed)
+		
 		choice = input("")
 		bigbooty()
 	if room == 24:
-		choice = input("")
-		bigbooty()
+		print("This is it.")
+		pause()
+		print("You have reached the end ")
+		pause()
+		print("You defeated the Burger King, and now", end = "")
+		t.sleep(0.4)
+		print(".",end = " ")
+		t.sleep(0.4)
+		print(".",end = " ")
+		t.sleep(0.4)
+		print(".")
+		pause()
+		print("Your ", end ="")
+		t.sleep(0.3)
+		print("B", end = "")
+		t.sleep(0.3)
+		print("U", end = "")
+		t.sleep(0.3)
+		print("R", end = "")
+		t.sleep(0.3)
+		print("G", end = "")
+		t.sleep(0.3)
+		print("E", end = "")
+		t.sleep(0.3)
+		print("R", end = "")
+		t.sleep(0.3)
+		print("Q", end = "")
+		t.sleep(0.3)
+		print("U", end = "")
+		t.sleep(0.3)
+		print("E", end = "")
+		t.sleep(0.3)
+		print("S", end = "")
+		t.sleep(0.3)
+		print("T", end = " ")
+		t.sleep(0.3)
+		print("is over.")
+		pause()
+		print("Would you like to remain in the dungeon?")
+		print("y/n")
+		choice = input("> ")
+		if choice == "y":
+			room = 10
+		if choice == "n":
+			break
 	if room == 30: #puzzle
-		choices = ''
-		choice = input("")
+		choices = 'east, south, use, west, door, vines, help, choices'
+		print('You are in an overgrown room, covered with vines. There are two doors. The door to the West in locked shut by the vines. The door to the left has a bright neon sign saying "SHOP"')
+		choice = input("> ")
 		bigbooty()
+		if choice == "east":
+			room = 10
+		if choice == "south":
+			room = 31
+		if choice == "use" or choice == "vines" or choice == "west" or choice == "door":
+			if vineBurn == False:
+				print("These vines are blocking the door. Maybe you can destroy them somehow. wink wink")
+				choice = input("> ")
+				if choice == 'torch' or choice == 'burn':
+					print("You burn down the vines, opening the way!")
+					vineBurn = True
+				if choice == 'cut' or choice == 'sword':
+					print("You cut the vines, opening the way!")
+					vineBurn = True
+			if vineBurn == True:
+				print("You enter the room.")
+			room = 32
+
 	if room == 31: #shop room
-		choice = input("")
+		choices = 'key piece, burger, leave, north'
+		print("You enter the shop")
+		print('"Hello!" says the shopkeeper, a sentient French Fry.')
+		print("What would you like to buy:")
+		print("")
+		if boughtKey == False:
+			print("Key Piece, 300 BurgerBux")
+		else:
+			print("Key Piece, out of stock")
+		print("Burger, 50 BurgerBux")
+		choice = input("> ")
 		bigbooty()
+		if choice == 'leave' or choice == 'north':
+			room = 30
+		if choice == 'key piece':
+			if boughtKey == False:
+				print("out of stock!")
+			elif stats[BurgerBux] >= 300:
+				print("You bought the key piece:")
+				print("-300 BurgerBux")
+				stats[BurgerBux] -= 300
+				print(f"BurgerBux remaining {stats[BurgerBux]}")
 	if room == 32: #boss
-		choice = input("")
-		bigbooty()
+		print("You enter the room. Its full of artisan cheese and also some peanut butter.")
+		if bossnames[rat[2]] != "dead":
+			print(f"A large Mouse with a Sewing Needle Attacks!")
+			boss_fight(rat[0],rat[1],rat[2])
+			print("A chest appears, and you open it.")
+			print("You get the Sewing Needle of Death!!!")
+			#itemNames = ["Grease Torch","Fry Sword","Burger Bun Armor","Pickle Shield","Burger","Key Piece"]
+			itemNames[swordN] = "Sewing Needle of Death"
+			stats[AverageDamage] = 15
+		else:
+			print("There's nothing here:")
+			room = 30
+		
 	if stats[Health] <= 0:
 		print("add save states pls")
 
 
-print("")
-print("No, you’re NOT a real gamer.")
-print("")
-print("I’m so sick of all these people that think they’re gamers. No, you’re not. Most of you are not even close to being gamers.I see these people saying “I put well over 100 hours in this game, it’s great!” that’s nothing, most of us can easily put 300+ hours in all our games.I see people who only have a Nintendo Switch and claim to be gamers. Come talk to me when you pick up a PS4 controller then we be friends.")
-print("Also DEAR ALL WOMEN: Pokémon is not a real game. Animal Crossing is not a real game. The Sims is not a real game. Mario is not a real game. Stardew valley is not a real game. Mobile games are NOT.REAL.GAMES. put down the baby games and play something that requires challenge and skill for once.")
-print("")
-print("Sincerely, all of the ACTUAL gamers.")
+
+#("No, you’re NOT a real gamer.")
+
+#("I’m so sick of all these people that think they’re gamers. No, you’re not. Most of you are not even close to being gamers.I see these people saying “I put well over 100 hours in this game, it’s great!” that’s nothing, most of us can easily put 300+ hours in all our games.I see people who only have a Nintendo Switch and claim to be gamers. Come talk to me when you pick up a PS4 controller then we be friends.")
+
+#("Also DEAR ALL WOMEN: Pokémon is not a real game. Animal Crossing is not a real game. The Sims is not a real game. Mario is not a real game. Stardew valley is not a real game. Mobile games are NOT.REAL.GAMES. put down the baby games and play something that requires challenge and skill for once.")
+
+#("Sincerely, all of the ACTUAL gamers.")
+
+#      ...........  .... ............................................ ..... ..........................              .    ........',
+#       ..... ....  .... ............................................ ..... .....................                        ........',
+#          .   ...  ....  ........................................... ....  ................                             ........',
+#              ..   ....  ...........................................  ...   ............                                ........',
+#               .    ...   ...........',,;;::ccclcc::::::;;;,,,''....  ...   .  ..                                       ........',
+#                    ..    .    .';:loddxxxkOOkkkkkkxxxxxxxxxdddddoolc:;,'...                                            ........',
+#                             .;ldxxxxxxxxxkkOkkOOkxxdddxxxxxddodxxxxdooooolc:;,..                                       ........',
+#                           .;oxxxxkkkkxxkkkkkkkkxxxxxdddddxxxddddxxxxddooooooodoc:,..                                   ........',
+#                          .cxxkkkkkkkkkkkkkkkkkkkkxxxxxxxxxxxxxxxxxxxxxxddoooooooddoc:,..                               ........',
+#                         .:kkkkkkkkOOOOOkkkOkkkkkkkkxxxxkxxxxxxxxxxxxddxxddddodxddooddolc;.                             ........',
+#,'.                      ;kOkkkkOOOOOOOOOOOOOOOkkkkkkkkxxxxxxxxxkkxxxddddddooooooooooddoolc'.                           .......'',
+#.;;,.                   .oO0OOOOOOOOOOOOOOOOOOOOOkkkkxxxxxxxxxxxxdooddddoolllllcloddodxdolc::c;'.                       .......'',
+# .;;;'.                 ;xkO00OOOOOOOOOOOOOOOOOOkkkkxxxxxxxdddxxolccodoooolclcc:cclllool::c:;lxxdl;.                    .......'',
+#  .,:;,.                ,odk0K000000OOOOOOOOOOOOkkxxxxxxxxxddddoolc:clolcllcccc:::::::::;;;;,;ldxxxdc,.                 .......'',
+#   .,:::,'.     ....  .',:;ckO00000OOOOOOOOOOOOOkkxxxxxddddooooollccccllclolccc:::cc::;;;;;;,,;:oxxkxdl;.               .......'',
+#     .;cccc:'....',,'',,',,;okxdddxxxxkkkkkkkkOkkkxxxxddddooooollccccclllddlllc::clllcccc:::;;,,:dkkxollc'.             .......'''
+#      .',:cllcc:;,,;::;,,:::dOkdoc;,'',,;:cclodxxxxxxxdddooooolccclcccclodooolcclllllllccllc::;,:okkdc:ccc:.            .......'''
+#          .';:cllllc:::;;:::oxxxkxo:,.........'',;::cccccclcllllllllc::cllolcloooollllllllllcc::coxxoc;;;::'            .......'''
+#      ...     ..',;;::;;,;:odoccoddo:;,;,'.............. ......,;::c::::ccccccccllloooooollllc;,;:llc::::;;.           ........'''
+#     ,llc:;;;,''.......';odxxocccclolcl:'.............         ............',;;;;;;;;;:::clll:,......''''....          .........''
+#     .''',,,;;;;,''....'ldxxxdlc:;:loc:,,',;;cool:,...        ..........   .......       ...''.. ...........           .........''
+#             ....     .cxxxxxxolc::cl:;:;;lddddlc;'....       .''......................           .....                .........''
+#                       .,'',;clc::;;:c:;;:clooc;'......    .';:loolc:;;,,'''''''.......             ...'......          ..........
+#                .....',,;;::clc'.,,,,;:;;:ccc::,'........':oddoodxxxxxxdddolllooc,....        .... ...cxxddddooollcc:;;;;,''......
+#      ...',;:ccloddxxxxkkkkkkkxlc:;,,:oooddc;'';;;;;;;,,:ccodxxxxddddoooooooolll;...           .......;dxxxxkkkkkkkkkkkkkkkxxdoolc
+#',;:loddxxxkkkkkxxxkkkkkkkkkkkkkdc:,,;::::,'..;ddooddddoc:,,;coxkkkkkxdddoool:'... ..............   ...,okxxxxkxkxxkkkkkkkkkkkkOOO
+#xkkkkxxkkkkkkkkkkkkkkkkkkkkkkkkxoocclc;,'.....,lllodlc:;;;:,..':lodxxkxxxddoc;'....;;,,''...............,oddddddddxxxxxxxxkkkkkkkk
+#kkkkkkkkkkkkkkkkkkkkkkkkkkxxxxxkO0kxxdc;,'...'cddddc,,;:codc.';:lllllldxxdoc:::;;:clc::;;,'..............;loooooooodddxxxxkkkkkkkk
+#kkkkkkkkkkkkkkxxxxxxxxdddxxxdld000Okxddollcccoddlccccllccoc............,col:,.',;:ldddddddolc:;,'........',,;:clooddddddddxxxkkkkk
+#kkkkkkkxxxxddddddodddddddddl;,o00000Oxddxxdooollllc:;,'....              .,'.     ..,:lodxxddooc:'..''''''''''',,;:cloddddddddxkkk
+#kxxxdddooooooooooooddddxxxd:':x0000000kdddoolc;,...      ...  .   ......              ..,:ldxdooo:'..........''''''',;clodddddddxx
+#dooollllllloooooddddxxxkkkxc;lO000000Okxoc;'..     .....',,,'''.. ...........     ...... ..';coddo:'..................',:loddddddd
+#lcclllllloooodddxxxkkkkkOOo;,l0KK0Oxoc;'.....  ..'''','.'';:;;,.........'..... ............. .'codo:'...................',:loddddd
+#ccclllloodddxxxkkkkOOOOOOOxl;oOOko:'..   .','',;:;;,'';;'',,''......''......................    .;oc'.','''''''''''''.....';codddd
+#cccloooddxxkkkkOOOOOOOOOOkkdccclc;.. .. .,;,,,',;,'.';;'.','.........'..''..  ............       .',..';;...''''''',,,''....,clodd
+#ccloddxxkkkOOOOOOOOOOO00Okkxlc::;,..... ..,'..',,;;,'..',;,',;,'''..'....................      ....',;:cc;............''''.',clood
+#loodxxkkOOOOOOOOO0OOOO000OOkkdc;;,'..... .':;,;;;;;,'....;;',:;,'....  ..............      ...',;::clollc;.............',;:clloood
+#odxxkkkOOO00000000000000000OOOdc:;,,'.....';,,;;,'.....'''...''............ .    ......',;::clloolllllc:;'......'',;:ccllloooooodx
+#xxxkkOOO000000000000000000000O00Okxdol:;;,,,'',;;,........... ...... ......'',,;;:clllllooooollllc:;,''''...,:ccllloooooodddxxxxxk
+#xkxkOOO00000000000000000KK0OO0000K00000OOOkxddddol:,',;;::::cccclllllloodxxxxdddddooooooooollc:,'..........':loooodxxxxxxkkkkkkkkO
+#dxOOOOO0000000000000000KKKK0OOOOO0000000KKK0OOOOkxdooxkkOOOOOOOkkkkkkkxxxxdddddddddoooolc;,,.........''''''':loooodxkkkkkkOOOOOOOO
+#dxkOOOO0000000000000000KKKKKKK0OkkkkkO0000OkkOOxdddddxxxxxxxxxdddddddddddddddddollc:;,'........',;:clooodddddxxxxkkkkkkOOOOOOOOOO0
+#odxkkOOO0000000000000000KKKKKKKKK0Okxxddoodddxxkxxddddddddooddooooooollccc::;,,'.......',;::clodxxkkkkOOOOOOOOOOO00OOOOOO000000000
+#dxxxxkkOO000000000000000KKKKKKKKKKKKK00Okxxxdxxxxxdoolllc:;;;,,,,,,'''......'',;::clodxxkOOOOOO00000000000000000000000000000000000
+#kkxxxxkkOOOO0000000000000KKKKKKKKKKKKKKKKKKKKKKKK00OOkkkxddoooooooooddddddxxkkOOO00000000000000000000000000000000000000000000OOOOO
+#kkkkkkkkkkkOOOO000000000000KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK0000000K000000000K000000000000000000000000000000000000OOOOOkkkkOO
+#kkkkkkkkkkkkkkOOOOO000000000KKKKKKKKKKKKKKKKKKKKKKKKKKKKKK00KKKK0KKK0KKKKKKKK00KKKKK00KKK00KKKKKKK000KK00000000OOOOOkkkkkkkkkkOOOO
+#kkkkkkkkkkkkkkkkkkkOO0000000000000KKKKKKKKKKKKKKKKKK0000KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK000000OOOOOOOkkkkkkkkkkkkkkkkkkOOOOO
+#kkkkkkkkkkkkkkkkkkkO00000OOO00OOOOOO00000000KKKKKKKKKKKKKKKKKKKKK0KKKKKKKKKKKKKKKKK0000000OOOOkkkkkxxxxxkkkkkkkkkkkkkkkkkOOOOOOOOO
+
+
+
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMM0lkWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMWx.oWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMWl.lWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMWl ;XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMNc ;XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMK, ;XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMK, ;KMMMMMMMMMMMMMMMMMMMMMMMNKkolc:co0WMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMO. ,0MMMMMMMMMMMMMMMMMMMMMKo;'',;::,..c0WMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMx. .xNNNWMMMMMMMMMMMMMMMMNl.,ldxxxxdo:.:XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWKx:'',colloOWMMMMMMMMMMMMMMNc.lxxxxxxxxo'.xWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMM0c;coddxxxo;cKMMMMMMMMMMMMMMNc.cxxxxxxxxxc.:XMMMMMMMMMMWWNNNNWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMO:lxkkkkkkx:,cooooooooooodxOOc.'odddxxxxxl.,KMMMMMWKkxo:;:::;;xNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMO::dxxkkxdc,;:::::::::::;;,,;'...,'';:cc;..dNMMMMM0,.',;coooc..dWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMNkc,,:cc:;;:oxxxxxxxxxxxxxxdddoollc;,..  .cONWMMMMk.,dxxxxxxxl.'OMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMM0,.cllooddxxxxxxxxxxxxxxxxxxxxxxxxxdl:;,'',cONWMk.,dxxxxxxxo'.kMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMO' .,;;;;:cccoxxxxxxxxxxxxxxxxxxxxxxxxxxdo:.',;ll..lxxxxxxo,.:XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMx..'.,o:. .;..;oxxxdocoxxxxxxxxxxxxxxxxxxxddlc:,.  'cdddc,..lKMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMd.:c.:0o.:0NKc.'ldxdl:lxxxxxxxxxxxxxxxxxxxxxxxxdoc;...'..;o0WMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMWo.;l.'c.;KMMMNl..;dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdl;..,xNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMN:.:l..,.,cloxkc...'ldxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdo:'.;dKWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMX:.ll.,OKOxdollclOd..lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdl,.'ckXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMK;.ll.,0MMMMMMMMMMWd.'oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxoc,.,cOWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMO''lo'.kMMMMMMMMMMMXc.:dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxocldxdo:..lKMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMO',oo;.xMMMMMMMMMMMMO''oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxocldxxxxo;.'xNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWx.,oo;.xMMMMMMMMMMMMX:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdl'.lXMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWo.:oo;.xMMMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo,.:XMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWo.:do;.dWMMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo;.:0WMMMMMMMMMMMMMMMMMMMMWK0XWMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMNc.:oo:.cNMMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd:.,OWMMMMMMMMMMMMMMMMMMWk:,cKMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMK;.lodc.:KWMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdc..lXMMMMMMMMMMMMMMMMWO:;;:OMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMWx.'looc..,:ldO0KNWWWWX:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdo,.:KMMMMMMMMMMMMMMMXl;l;cKMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMO'.;oxo:..lxoccc::llllc..lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd;.lNMMMMMMMMMMMMMWk;cl;oNMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMNl.'lKMKl'.cNMMMWXKKKKKO;.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo'.dWMMMMMMMMMMMW0c;oc;kWMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMX:.,xWMWx,.:XMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdl.'OMMMMMMMMMMMNd',:;cKMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMNc.'xWMWx,.:XMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd:.cXMMMMMMMMMWO;;c;;OWMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMWd..cKWKc..dWMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo'.xWMMMMMMMMXl;oo;oXMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMXl..:dc..cXMMMMMMMMMMMN:.lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.'OMMMMMMMXd;co;:0WMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMNx;,,';xNMMMMMMMMMMMMK,.oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd:.;KMMMMMNd;cdc;xWMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMWXXXWMMMMMMMMMMMMMMO',dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd,.dWMMMWk,,::,lKMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNl.;dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc.;KMMNk::l;'lKWMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMK:.,oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd,.kWXo;:dl;lKMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMK;.;oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:.okc,cdo;cKMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWd.;dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:..;;;::;l0WMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWd.:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:.'odc,,dXMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWd.:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd;.:dl;cONMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWd.:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo..,;:dXWMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMx.,dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:..ckXWMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM0,.;dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd;.dWMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNx,.'cdxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxl.'OMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNk;.'cdxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd,.lNMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNx,.,ldxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd;.,0MMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMXd,.';codxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdoc'.;0WMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNOdc,'',;:clddxxxxxxxxxxxxxxxxxxxxxxxxxxxxddooc;,''':dXMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN0kdlc;,,',;;;;;;;;;;;;;;;;;;;;;;;;;;,',;,;coxOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWXKOxddxxxxxxxxxxxxxxxxxxxxxxxdxkKXXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
+
+# .  .. .......                    ..........................      ......................................''''....,,...............'
+#..................          ....,coddl:,',,,,'''''.......              .......';c:;'...................';:::,...''..',,'''...''..,
+#...................         ...:dkkOOOko;,,,;:::,.....                      .;dO0Oxl;...................;cc:,...''..',,,,''...'..'
+#.............          .  ....,looooddddc,:ldO00Od;.                .,cll:,.,oxddoooc,..................':lc,....,,'',,,,,''..'...
+#.............           ......,cllllllllcclodxxkOOd,.              .ckOkxdoccllllccc:'...............'''';c:'....,,'',,,,,,'..'...
+#..............      ..........';:cccccccccllllooodo;.              'lddollcccccccc::;..............''....'::.....''.',,,,,,'..''''
+#.......;okkko:..   .........';,,;::cccccccccccccll:.               .;clccccccccccc:;..  ........'''..'''..',........',;;;,,'''''''
+#.''...;dOOkxxdc'...........;cl:,';::ccccccccccc::;.                 ..,;;::cccccc:;'.     ..,codxxdc,'''.............',,,,,''''''.
+#xxdl:,coooolllc;.........,:llll;'';::ccccccc::;,'.                     ..',;;::::;'.      .;okOO000Oxc'.''',:cc:,....',,,,,''',,..
+#kxdoolcclccccc:,.......,:cllllc;..',;:ccc::;,'..     ....                 ...'','..      .,lddddddxxxo:',:ok0KKK0x:...',','''',,..
+#olllccccccccc:;'.....';cllllcc:'...',;;;;,'..     ..',,,,'..    ....',''..    ....       .;lolllllloooc:codxxkkOOOk:..''''''',;:;'
+#lccccccccccc::,....';:cllcc:cooc,...'''...       .',;;:cc:;'....',;:::;;;,.....          .,ccccccccccccclllooooddxxc'..''''';oxOOx
+#;;:::ccccccc:;'...,cooolc;:dO0KK0o,....         ..';:ldddolc,.';clooddoc;,'...........   .';::ccccccccccccclllllloo:...''..,cooddx
+#..',,;;:::::;'..':okOOkxlclddxk0Od:.           ...,:lloxkkxoc;:ldxxkxdooc,'................';;::ccccccccccccccccclc,...'''.,:cccll
+#  ....'',,,,'..,:ldxxdooollllllool:.         .....':clxkkkkxoclxkOOOOkocc,...'''''..........',;::cccccccccccc::::;,;;;;;;;,';:cccc
+#   ..........';ccclooolllcccccccc:,.       ........,:lddddoooooddddddxoc;'..'''''''''........',;::ccccccccc:::;;,,;:::::::;,,;:ccc
+#  ..........,:ccc;;:ldkdolccccc::,.      .......'...,:llllllllllooooooc;'..,,,,'''''''''''....',;;:cccccc::;;,,,;::::::::::;,,;:cc
+#...........;:cc:'..;d0XKOdlcc::;,.      .....''''''..';:clllllllllllc:,..',;,,,,,'''''''''''''.'',;::::::;,,,,;:::::::::::::;',;::
+#..........,:c:,.  .'cdOOo:;:::;'.     ......'''',,,'...,;:ccllllccc:,'.',;;;;,,,,,,,,,,'''''','''',,;;;,''',;:::::clc::::::::;'',,
+#',;;;;;,'..,,'.      .,:'.,,;,'.     ......''''',,,,,'..',;;:cc:;;,'.',;;;;;;;,,,,,,,,,,'',,,,,''.''''....';;;;;:ldkkd::::::::;,,;
+#;;;;;;;;,,'...            .....      .....''''',,,,,,,,'..',,;,,....,;;;;;;;;;,,,,,,,,,,'',,,,,,''....   ..;;;;;cooodollool:::::::
+#:loddolc;,'...                       .....''',,,,,,,,,;,,'..''...'',;;;;;;;;;;,,,,,,,,,,,,,,,,,,,''.     .';;;cdkOdclllok0Oo::::::
+#dddddoool:,'..      ..'.            ......'',,,,,,,,,,,;,,,....',;;;,;,;;;;;;,,,,,,,,,,,,,,,,,,,'''..    .';;;:dkxoccccldkxl::::::
+#odkkkxdllc;'..   .'.,ldl'          ......'''''',,,,,,,,;;;;;,,;;;;;;;;;;;;;;,,,,,,,,,,,,,''''''',,''.    .',;;;;;;::::::cc::::::::
+#k000OOkdlc:,..  .cdlclcc'         ........'''',,,,,,',,,,,;;;;;::;;;;::;;;;;;;;;,,,,,,,,,,,,,''''','.    ..,;;;;;;;;;;;;;;;:::::::
+#kkxxxdddoc;,..  .':::cc;.        .........''',,,,,'..........'',,,,;;;;;;;;;;;;;;;,;;;;,,,,,,,,,,'''.    ..,;;;;;;;;;;;;;;;;::::::
+#oooooooolc;'.     ...''.         ........''',,'''...................',,;;;;;;;;;;;,,,,,,,,,'''''''''..  ...,;;;;;;;;;;;;;;;;::::::
+#ooolllllc:,..                    .......',,,'''''.....................'',,,,,;;,,,,,,'''..............  ...,;;;;;;;;;;;;;;;;::::::
+#llllllcc:,..   ..                 .....',,,',''',,,,,,,'''''................'''''''.................... ...,,,,'''''',,;;;;;;:;;::
+#lllllcc:,'..  ....                ... ..',,,,,',,,,,,,,'''........'''',,''..................................'..',,;;,,'',;;;;,,,,,
+#llllc:;,'....';,..                    ...',;cc;;,''''''''..........''',,,,'....................'''''..........',;:clc:;'',,''',,,,
+#cccc:;,'....'cc:'.                   ....',:occl;...',,,..........'',,,,,,....'''.............................,:lodddol;'.',:ccc:;
+#;;;;;,'......;:,. ...,:;'..        ....''',;:ccc;,,',,,'...........''',,,'...,,,'......':cc;'.................;cloxkkxdc;;:lodddoc
+#',,,,'.......... .:dOOO0Oxl;.     .....'''',;cllc:;,;,,'''.....'''''''','...',;,'.......,;;;'...','...........;:lxxkkkxocldkOOxdoo
+#...''........   .ck000KXXKOo;.    ......'''',,;;;,,,,''''''''''',,,,,,,'...',;;;,'.........'..................';loooooooodxxkkOxlc
+#.......,:ccc;'..;dkkxxO0K0xlc,.  .......''',,,''''''''','',,,,,;;;,,,''..',,;;;;;,'......'''''.................,:llllloolooooodoc;
+#.';:;:dO000Okdl:cooooolooxdll;.  .......'',,,,,,,,''''''..'''''''''''''',;;;;;;;;,,'......'''''''''''''.....''..,;cclllllllllll:,'
+#.';:cx00Okxxddolllllllllcllcc;.  .......'',,,;;;;;;;,,,,,,,,,,,,,,,,,,,,,;;;;;:::;;;,'.......''............',,'..';:ccllllcc:;,'.'
+#.';:lxkxxdooollllclcccccccc::,.  .......'',,,;;;;;;;;;;;;:::::::;;;;,,,,,;;;:::ccc::;;,'.''',,,,'''''''.''',,,,'..',;:cc::;,'..',;
+#.';::oddooolllllcccccccccc::;..  .......''',,,;;;::::::::::::;;;;;,,',,,;;;:::cccc::;;,,'''',;;;,,,,,,'.''',,,,,'...,,,,,'...',,;;
+#.';c::lolllddolcccccccccc::;,.    ........'',,,;;;::::;;;;;;;;;;;,,'',,,,;;;;;;::;;;,'......',;;,,,,'''..''','',,'...'....',,,,,,,
+#..,:c:::cccxKKOkxdolcccc::;,'..   .........''',,,;;;;;;;;,,,,,,,;;;,,''...''''',,,,'.........',,,,'''....''','',,,''...'',,,,,,,,,
+#'',:llcc::lOXXXK0dc::::::;;'...   ..........''''',,,,,,,,,,,,,,,;;;;;,,''''''.................'''''......''','','''''''''',,,,;;::
+#..':cllllok0KKK0d:;;:::;;;,.....  ...............''''''''''',,,,,;;,,,''.................................''''''';cooc;',:ll:,'',;;
+#..';ccccllc:ldkkl,,;;;;;;,.. ...   ................''''''''''''''''''.....................................''''',cdxxdc:lxkkx:',;;;
+#..',cccccc;..,;c:'..'',,,..        ..................''..............''''''''''''..................... ........':llclccllllo:,;:cc
+#.'',:cccllc,.......  .....         ...............................''''''',,''''''...................    ........';:ccccccc::,,;:cl
+#.''',:ccccc:..    ..','..            ..............................''''''',,,,,,''''''''............    ....''''.',;:ccc:;,,;;;;:c
+#''''';ccccc:'.  .;dO00Oxl,.          ...............................'''',,,,,;;;,,,,,,,,'..........    ..''''''''..',;:;,..,;;'.''
+#.'''';::::::;. .ck00OOkkxd:.          ...........................'''''',,,,,,,,,'''''''...........    ...........'...''....',,'...
+#....';ldddol:'.;dxxdddooool;.          .........................''''''''''''''...................   ....'''.''''..''.......''''...
+#...'ck0K0Okxoc:clolllllcclc;.          ...........................''''''''.................................'..'';cc;'.''''',,,;;;;
+#...:xOkxxdooollccccccccccc:;..        .............................................................'..........'cdkkdc;cool;;;;;:::
+#...;oddoollllccccccccccc::;,''..........................................................................'''''';coololldk0Ol;;;;:::
+#...':llllcccccccccccccc::;,,;;,,'.................................................................''''',,,,,;;cdOkoccclldo:;;;;:::
+#....';:cccccccccccccccc::;',;:;;;'............................................................'',,,,,,,;;;;;;;cdkdlccc::::;;;;::::
+#......',;;::::ccccccccc:;,';;,''...........................   .....................   .......'',,;;;;;;;;;;;;;;::;;;:;;;;;;;;:::::
+#........''',;;;:::cccc:;,..................................      ..  ...                      ..',;;;;;;;;;;;;;;;;,;;;;;:::;;:::::
+#.............'',,;;;;;,,....   ............................                                      ..........';;;;;;;;;;;;;;;;;;::::
+#.................''',''.....   .............................                                               ..';;;;;;;;;;;;;;;;;:::
+#............................    ............................                          .                      ..''..........'',;;;;
+#     ......................     ...............................                     ...                                    ...,;;;
+#              .............    .....................................           ... ....                                     ...',;
+#           ...........     .......................................       ........                                       ....,,
+#.......          .........     .......................................       ........                                         ..''
+
+#;;'  .;,,'''.........''.....................................................................................'''',,,;;;;,,,''''....
+#;;'...;;,,,'.........''....................................................................................',,;;;::cccc::;,,,'''''
+#:;,. .;;,,,'..........''...............................................................................''',,;:ccloddddolcc:;;;,,:l
+#,;.  ';,,,''..........''..............................................................................''',,;:cldxO0KK0Okdoc::;:ckN
+#c:''',;,,''............'.........'''''''.............'..........................'''''''''..............'',,;cldk0NWMMWNKkdlcc::cd0
+#l:,,;;;;,,,............''....'',,,,,'.........'''''.............''''',,,,,,,,''''.......................',;:cldkKWMMMMWXOxoll;;;;;
+#;,...,;;,,'............'''';;,,,''....   ........''..';:;;;;;;;;,,,,,'''................................',;;cloxOKNNNNXKkdlc:;,,''
+#,'. .;;,,''............';;;;,,,'....          .......':lc;,''...........................................',,;:cclodxkO0kdol:;;,''..
+#;'...,;'..............,;;,,,'..........         ......',:c,'............................................'',,;;::ccllodoc::;,''''..
+#;'. .',.......''',,,;:c;,''...',,;;,,'.....   ..........',,'';;..........................................',,,,,;;;:::cc;;;,,''....
+#;'...',..','''''''',:cc;'';:looddooollc:;,'...............'..;:,..........................................',''',,,,,,;;;;,,'......
+#;'. .',........'...,;;;;:oxkkkxxxxxxddddoolc:;,'..........'',;:c;'........................................''''..'''',cc;,..'''....
+#,.  .,,..... .,,...,,,,;cloodxxxxxxxxxxxxxdddollc:;,,''..'''',:lol:'................................................,cc,'.........
+#,. ..,,''''..,;..,clcldxxoc;;;::cloddxxxxxxxxxxxxddollc:;,,,,,,:oxxc'............';ccc;'.............',,'''........',:;''.........
+#,. .';,',,'';;..,cc:lkOkxdlc:;,''',;:loddxxxxxxkkxxxxxxxdollc;;:lodd:...........'lddddxo'..........''',,,''..'..''',::,,'.........
+#,. .,;,,;:;;:'.,;;;lkkxdddoollc:;,,,,,;:lodxxxxkkxxxxxxkkkxxxdodddooo:'........'coollloo,...........',,,,,,,,,,,,,,,;,','.........
+#,...:cloxkxo;.,,';lkkkxxxddoolllccccc::;;:lodxxxxxxxxxkkkkkkkkkkkkkxxo,.......;llodlllo:...........'',;::::::;;;;,''''',''''''....
+#oloxOO000kxc.,;.,okkkkxxdoollllllllllclc:;;;:lodxxxddddxxxxkkkkOOOOkxol,....'lxoxkdlllo;...........';:clooddoolc:;;,,,,;,'''''''..
+#00000000kxo:':,,oOkkxdoc:;;;;;::cccccccll:'...;:clolllllclooxkOO00OOklcc'...cO0Okooollo:..........';:coxkOKK0Okxdoccc::cc:,',''''.
+#0000OOOkxdoc,,;lkkkxxddol:;,'',,',;:cccc:'.......,:cc:::;;;:clxO000kkl:l,...cO0xlclool;........'',;:cldk0NWMWWX0kdoccc:clo:'''''''
+#0OOkkxddoooc;:lloodddddollcc:::;;;;:cc:'',:loc,..,lllllllccc:::lxOOOklldc...,odolcllc;''',,,'''',,;;clox0XWMMMWKOxdoc;;:cc;'''....
+#kkxxxdoooooccdkxdocccccllllllccccccc;'':ldxkkx:..:lllloooddddolllooddlldo;',lxoodc,'''''.......''',;:cloxk0KXXK0kxdlc;;:l:,,,'....
+#dxxxddooool:cxkkkxxdolccc:::ccccc:;'':oxxxkkkx:..cllcclloooddddxxdxdlc:lo;'ckkxxx:............'''',,;;:cloddxxkKKkdol:;;cc',;''''.
+#:odddddoooc:lxkkkkxxxxdddoolc:::::;:oxxxxkkkkx:..clc:::::cloodxxxxkkddl;;';dOkkkxc..........''''''',,,;;:ccllodO00K0kxdllc,,;'....
+#.,coddoool:;oxxxxxxdddddoooooooddodxxxxxxkkkkxc..colc::;;;::ldxxxxkxodol;.,dxdddo;...........''''''',,,,;;;::cclx0NNN0dcll;;,''''.
+#..';cooooc;;lddddddoooooooooooodddxxxxxxkkkkkxl,.cdoollclccccldxxxkdlolc,.;kkdlc:''''.'......''''''''',,,,,;;;;::lxOkdoc::,''''...
+#....';lol:,;loooooooodddddoooooddxxxdddxxkkkkxol:;oxxxdoloodoooxkkklcc;,.;kOkxo;'''''''''''''''''''''''',,,,,,,,,,;;;:::,'''......
+#......,cc;,;clloooooddddddolloddddddoddddxkkkxdoollodxkkdddddxxxkkd;,::,cxkxdxx:'''''''''''''''''''''''''''''''''''''';;,'........
+#.......';,,:cllllloooooooolloolcccllloooddxkkxxddddoooddddxxkkkOkkl'co;cOOxdooo:''''''''''''''''''''''''''............';'.........
+#.........',:ccllllloooooolcccc:,..;ccllooddxkxddddoddddddoodddxkkdlcl:lk000kdlc;''''''.................................,'.........
+#.........',::ccccllloooolc:::::,..;ccllc::cdxxdddddddddxxkkxdddxdolcclxO0KKkkx:''......................................''...'''',,
+#.........',;:::ccclllooolcc::c::;:ccclc,',:lddddddddddddxxkkkOOOkxoloxkOO00kOO:.............................'''',,,,;;;;;;;;;;;,,,
+#.........',,,;;;::cclllllllllllllllclllc::clodddddddxxdddxxkkOOOxoodxkOOOOO0KOc..............'''',,,,;;;;:::::::::;;;;;,,,,,''''''
+#.........',,''',,;:ccclllllllllllllllloooolooddddddddddddxxkkOOxoodxxkOO00O000l''',,,,;;;;:::::::::::;;;;,,,,,,,''''''''..........
+#..  ..  .,'....'',,;;;:::::::cclllllooddxxxxxxddddddddddddxxkkxddxxxkkkO000O0Oo::::::::;;;;;,,,,''''''............................
+#   .',............''''',,,,;;cclloodxxxxxxxxddddooddddxxxdodxxxkkkkOO00O0kc,,,''...................          .................
+#..    .';,......   ......',;cc:;,;;;;:clodxxxxxxddddoodddxxdoodxxxxxkkkOO00O0k;......              ...............''''''',,,,;;;;;
+#     .',,'.....          ..;cooccll:,',;:codxxxdooooooddddolodxxxxxxxkkkO00O0k,      .............''',,,,,;;;;;;:::::::::ccccccccc
+#    .',,,'..................'''',;:,'....',:lddocclooooddolodddddddollodkOOkOkc,'.''',,,,;;;;;;;:::::cccccccllllllllllllllllllclcc
+#   ..',,'.........''',,,,,,,'','....... .....;cc::cloooolcloool:;;,'',,;cllodxkxoc:::::cccccccclllllllllllllllllllllllccccccc:::::
+#   ..,,'..........''''',;;::::::;;;,'..     ..;:::cllllc::c:,'........'',;,;:codxxdocllllllllllllllllllllllcccccccc:::::::::::;;;,
+#.....,,'...............'',,;;::::cccc:;'....',;::cclcc:,'...................';cccldddllccccccc::::::::::::::::::::;;;,,,'''.......
+#:c'..','.............'',,,,;;;,,,;;;:::;,,,;;:::cccc:;..   ........     ....';coooooddo:;;;,'......''''''''''.....................
+#od;...'''...........',,;;::::::;;,,,,,,,,,,;::::cc:;'.      ...       .....',;:lodxxxkkxdoc,...........         ..................
+#lxo,...'''''''''..'',,;;::::::::;;;;;,,,,,;;:::::;,..               ........',;;:clodxxxkkOxo;.        ..............'',,,;;;:::::
+#okkl,...''''''''''',,,,;::::::::::;;;;;;;;;:::::;'..                  .......',,;;:ccooddxxxxxdc,..........',,,;;:cclllllllccc:;;,
+#oxkd:'..'''',,,,'''',,,,;:;;;;;;::c:::::::::cc:;'.                     .........',,;;::clloddxxxdoc;;;;::::clllccccc::::;;;;;;,,,'
+#dxxoc;'..''',,;,'..'''',,,;;;;,;;:ccc:::ccccc:,..                       .........',,,,;;;::ccoodxxxxdl:;;;,,;;,,,,,,;;;;;;;;,,,''.
+#xdolc:,....'',;;,'''..'',,;;;;;::ccc::cccccc;'...                        .........',,;;,,,,;;;;cldkO0kdlc;;,,,,,,;;;;;;;;,,,'''''.
+
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWWN0xxO0XNWWNNNXKKKXXXNNNNWWNNNNNNNWWWWWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWWNOc'.,cok0K00OxoclokOOOO00000000000KKKK0XNWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMWWWWWWWWXx,..:dxxxxdolllc::codddddxkkO000OOOO0Od::d0NWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMWWWWWWWNNKOl'..cxkxdl;''''',,,,;clolllodxO0000Okkxl;',cdOXWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMWWWWNK0kdol:,..:dxdo:'.......''..',:cclloddkOOOkxdlc,.....:xXWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMWWNX0kdlc:;;;;;'.,ldol;....;:'..;c,..',;coxkkkkkkkkxol:,......,xXWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMWN0kdc:;;,'''',,,..:llc;'....,,..'cd:'',;:codxkO0OOO00OOkxdlc:;,,l0NWWWWWWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMXkl;,,,,,'...''',,.'ccclc;;,'''''.',,',,;;:llodxkO0KKXXXKK0OOOOkkxxxO0KXXNNWWWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMM0c,''',,,,'...'','',:coooolc:,,''....,;::ccllodxOKXXXXXK0kxddddolc:;;,;;:cokKNWWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMXo,''',;;;,'..''',,;:codoollllc:;,,;:cccllllodx0KXKKK0Oxoccooc::;,,,,'......;kNWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMW0l;,,;:::;'...',,;:coxkxdolloolllloooolooooxOKXXXK0Oxl;'',,,,,'..  .........,xNWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMWKd:;;:cc:;'..',,;cldkOOkxdoodxxxxxxddoddxOKXNNXK0Okd:'........     .........lXWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMNOo::::::,..';;;cok000OkkkOOOOkkkxxdddk0XNNNXKK0Okd:'.''..       ........ .dXWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWXkl::::;'.,;:codO0KK0000000OOOkxxdxkKXNXXKK00Okkdc,'';;'.....'''... ....lXWWWWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMWXkl:;;,,;clodxk0KKKK0OkkkOO00000KXXXXXK00OOOOkdl;'..',,;;,,,'..   .''.c0XNWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMWXOdoc:;;cloodxkOKK00koccdO0KXXXXXXXXXXK00Okkkxdl:,'........      ....':lldkOKNWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMWNOxooooolllooodxxkOOOOdc;;cd0KXXXXXXXKK000Okxxxxdlc:,'.....        ...,cccccccloxOKNWMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMWKxdooooooooooooodxxxxxkxl;,,:ok0KKKKKKK00Okkxdlllc:;,.........     ...,clcccccccccccoxOKNWMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMXOdooooooooooooooodxddddxxdl;,',:ok0KKKKKK000kkxolc:,'............ ...',:llccccccccccccccldkKNWMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMWKkdooooooooooooooooooddodoooddlc::cldO0KKKKKK0Okkdool:;,''''''',,'...',;:colccccccccccccccccccokKNWMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMWKxdddoooooooooooooooolddddooodxxdodddxk0000OOOkkxdoolllc:;;;;,,,,...';:::cllcccccccccccccccccccccldOXWMMMMMMMMMMMMMM
+#MMMMMMMMMMMMW0xddddoooooooooooooodoloxkxxddxkkkkxxkkOKKK0Oxddoc;,,,,''.............':loolcccccccccccccccccccccccccokXWMMMMMMMMMMMM
+#MMMMMMMMMMMW0xddddddoooooooooooooooloxkkkkxkkkkOOOOO0KKKKK0OOOxl:::,''...........',:clllccccccccccccccccccccccccccccokXWMMMMMMMMMM
+#MMMMMMMMMMW0xdddddddoooooooooooooooodxkkOOkkkOO00K0000KKKKKK000Okkxdolllc::;;:::clllcccccccccccccccccccccccccccccccccco0NMMMMMMMMM
+#MMMMMMMMMWKxddddddddoooooooooooooooodxkOO00O00KKKKKKK00O0000000000OOkkOkxxxxkkxdollcccccccccccccccccccccccccccccccccccclkXWMMMMMMM
+#MMMMMMMMMXkddddddddooooooooooooooooodxxO0KKKKXXXXXXXK0OOOOOOO0000K0000kxxkOOkxolccccccccccccccccccccccccccccccccccccc:::cxXWMMMMMM
+#MMMMMMMMNOddddddddddooooooooooooooodxxxOXXXNNNNNXXXK0OkOOOOOO0KK0000KOdccokkolcccccccccccccccccccccccccccccccccccccccc:::cdXWMMMMM
+#MMMMMMMWKxdddddddddooodooooooooooooxkkk0XNNNNNNXXXXKOOOOOOO00KKK0000KKkl:lxkdlccccccccccccccccccccccccccccccccccccccccc:c:cxNMMMMM
+#MMMMMMMNkddddddddddoddooooooooooodxkkkOKNNNNNNXXXXK00000O000KK000000KK0xllxOkdlccccccccccccccccccccccccccccccccccccccccc:::lOWMMMM
+#MMMMMMWKxddddddddddddooooooooooodxxxxO0XNNNNXXXXXKKKK00000KK00000000KKK0xdxdxxoccccccccccccccccccccccccccccccccccccccccc::::dXMMMM
+#MMMMMMNOddddddddddddddoooooooooxkkkkk0XNNNNNXXXXKKKKKK000KK00000000000KKkkxoxkdlcccccccccccccccccccccccccccccccccccccccc:cc:lOWMMM
+#MMMMMWKxddddddddddddddooooooooxxxkOOOKXNNNNNXXXKKKKK000000000KKKKKK000KKOdddkkxlccccccccccccccccccccccccccccccccccccccccc::cckNMMM
+#MMMMMW0dddddddddddddddoodoooodkkxxkO0KXNNNNNNXXXKKK00000KKKKKKKKKKK00KKK0xddkkdolccccccccccccccccccccccccccccccccccccccccc:ccxNMMM
+#MMMMMNOddddddddddddddddodooooxkkddxO0KXXXNNNXXXXXKKKKKKKKKKKXXXXKK000KKK0kddxdollcccccllllcccccccccccccccccccccccccccccccc:ccxNMMM
+#MMMMMXkdddddddddddddddddoooooxOkxxkO0KKXXXXXXXXXKKKKKKKKKKKXXXXXKK0000KKKOxdolccclcllclllllcccccccccccccccccccccccccccccccccckWMMM
+#MMMMMXkddddddddddddddddddddooxOOO0KKXXXXXXXXXXKKKKKK00000KXXXXXXKK0O0KKKKOxdolcccllllllllllcccccccccccccccccccccccccccccccc:l0WMMM
+#MMMMMKxdddddddddddddddddddddox0KKKXXXXXXXXXKKKKK00000000KKXXXKKK00000KKKK0kxolcclllllllllllccccccccccccccccccccccccccccccc:cxXMMMM
+#MMMMMKxdddddddddddddddddddddod0XXXXXXXXXXXKKKK00000000KKKXKKKK000000KKKKK00kocccllllllllllllccccccccccccccccccccccccccccccclOWMMMM
+#MMMMMKxddddddddddddddddddoddodOXXXXKKKKKKKKK00000000KKXXXKKK0000KKKKKKKKKK0xllllllllllllllllcccccccccccccccccccccccccccccccxNMMMMM
+#MMMMMXkdddddddddddddddddddoooodOXXXXKKKKK000KKKKKKKKXXXXK00000KKKKKKKKKKXX0dlclllllllllllllllcccccccccccccccccccccccccccccdKWMMMMM
+#MMMMMNkdddddddddddddddddddodooodkKXXKKKKKKKKXXKKKKKKKKKK0000KKKKKKKKKKKXXKkolllllllllllllllllcccccccccccccccccccccccccccco0WMMMMMM
+#MMMMMW0ddddddddddddddddddddoooooddk0KKXXXXXXXNXXXKKKKKK0KKKKKKKKKKKKXXKXX0dllllllllllllllllllccccccccccccccccccccccccccclOWMMMMMMM
+#MMMMMWKxddddddddddddddddddddooooooodxkO000KKXXNXXXKKKKKKXKKKKKKKXXXXXKKK0xllllllllllllllllllllcccccccccccccccccccccccccoOWMMMMMMMM
+#MMMMMMNOddddddddddddddddddddoodoooooooodxO000KXXXKKKKKKKKKKKKKXKKKKKKKKKkollllllllllllllllllllllcccccccccccccccccccccco0WMMMMMMMMM
+#MMMMMMWKxddddddddddddddddddddoddooooooooxO0000KK000K0OOkkkkO0KKKKKKKKKKKkollllllllllllllllllllllccccccccccccccccccccco0WMMMMMMMMMM
+#MMMMMMMNOdddddddddddddddddddddodooooooox0KK000K0Okkkxdoooooodk000KKKKKXXOolllllllllllllllllllllcccccccccccccccccccccdKWMMMMMMMMMMM
+#MMMMMMMWXkddddddddddddddddddddoooooooodOXXXXKKK0kdoollooooooldO000KKKXXXkollllllllllllllllllllllcccccccccccccccccclkXWMMMMMMMMMMMM
+#MMMMMMMMWKxddddddddddddddddddddoodooodk0XXXXXXKOdoooooooooooodO0KKKKXXXKxlllllllllllllllllllllllcccccccccccccccccoONMMMMMMMMMMMMMM
+#MMMMMMMMMW0xddddddddddddddddddddddooodk0KK000Okdooooooooooooox00KKKKXXXKxllllllllllllllllllllllllccccccccccccccldKWMMMMMMMMMMMMMMM
+#MMMMMMMMMMW0xddddddddddddddddddodooooodxkxxdddoooooooooooooook0KKKK0KKXKxllllllllllllllllllllllllccccccccccccclkXMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMW0xdddddddddddddddddddooooooooooooooooooooooooooook0K00000KKKkollllllllllllllllllllllllccccccccccld0WMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMWKxdddddddddddddddddoddooooooooooooooooooooooooook000000KKKKOdlllllllllllllllllllllllllcccccccclkXWMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMWXkdddddddddddddddddodoooooooooooooooooooooooooox0K00KKKXXXKkollllllllllllllllllllllllccccccld0WMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMWNOxddddddddddddddddooooooooooooooooooooooooooox0KKKXXXXKKKOollllllllllllllllllllllllcclccokXWMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMWKkddddddddddddddddddoooooooooooooooooooooooodk0KKKKKK0OOxollllllllllllllllllllllllllclxKWMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMWNOxdddddddddddddddoooooooooooooooooooooooooodxkO000K0Odollllllllllllllllllllllllllld0NMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMWXOxdddddddddddddoooooooooooooooooooooooooooooddkkOOxolllllllllllllllllllllllllldOXWMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMNKkdddddddddddddddooooooooooooooooooooooooooooodddollllllllllllllllllllllllldOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMNKOdddddddddddddoooooooooooooooooooooooooooooooollllllllllllllllllllllloxOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMWXOxdddddddddddoooooooooooooooooooooooooooooooollllllllllllllllllllokKNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMWN0kxdddddddddoooooooooooooooooooooooooooooollllllllllllllllllox0XWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWX0Oxddddoodoooooooooooooooooooooooooooooooolllllllllllldk0XWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWNK0kxddoooooooooooooooooooooooooooooooollllllllodxOKNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWNX0Okxddooooooooooooooooooooooooooooloodxk0KNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWNXKK0OOkkxxdddddooddddddddxxkOO0KXNWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMWWWNNNXXXXXXXXXXXXNNWWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+#MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
