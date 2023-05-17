@@ -1,9 +1,10 @@
 import random
 import time as t
 from playsound import playsound
+firstpause = True
 def pause():
-	print("")
-	programPause = input("Press <ENTER> to continue...")
+	if firstpause == True:
+		programPause = input("Press <ENTER> to continue...")
 	print("")
 def blank():
 	print("")
@@ -11,7 +12,21 @@ def blank():
 #PLAY SPUIND FEFFEFTT
 #other things
 
-
+def printburger():
+	print("        ████████████████████        ")
+	print("      ██                    ██      ")
+	print("    ██                        ██    ")
+	print("  ██                            ██  ")
+	print("  ██                            ██  ")
+	print("  ██                            ██  ")
+	print("████████████████████████████████████")
+	print("██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██")
+	print("  ████████████████████████████████  ")
+	print("██                                ██")
+	print("  ██    ██    ██████    ██    ████  ")
+	print("  ██████  ████      ████  ████  ██  ")
+	print("  ██                            ██  ")
+	print("    ████████████████████████████    ")
 
 room = 10
 choice = "PLACEHOLDER"
@@ -36,11 +51,11 @@ inventory = ["torch","sword","nothing","nothing","burger","nothing"]
 
 keypieces = 0
 #MAKE BOSS ROOMS
-attackTypes = ["sweep","stab","slice","bash"]
+attackTypes = ["sweep","stab","slice","bash","burn"]
 #MAKE IT SO ARMOR DECREASES AND CANNOT BE REGENERATED, also armor can overflow so if player has 1 armor left and takes a 100 damage hit they still take no damage
 
 statnames = ["Health","Average Damage","Armor","BurgerBux","Burger%"]
-stats = [100, 7 , 0, 0 , 100]
+stats = [100, 8 , 0, 0 , 100]
 Health = 0
 AverageDamage = 1
 Armor = 2
@@ -61,7 +76,7 @@ def healthRand(a,b):
 	return eichpee
 bossnames = ["Phil W. Frencherfrie","Patty Clown Kidnapper","Mouse with Sewing Needle","Really Big Cheese Cat-Slime","Zomburger","Cheese Cat-Slime"]
 zomburger = [healthRand(70,90), 10, 4]
-slime = [healthRand(30,50),20,5]
+slime = [healthRand(30,50),18,5]
 bigSlime = [healthRand(80,110), 30, 3]
 #bosses
 patty = [200,15,1]
@@ -101,11 +116,12 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 	stabbed = 0
 	stunned = -1
 	bossBleeding = 0
+	bossBurning = 0
 	playerPoisoned = 0
-	
 	print(f"Your HP: {player_hp}")
 	print(f"{bossnames[boss_number]}'s HP: {boss_hp}")
 	print("")
+	pause()
 	while player_hp > 0 and boss_hp > 0 and talkSucc == False:
 		if stabbed <= 0:
 			while turnOver == False:
@@ -141,6 +157,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 					stab = stats[AverageDamage] + 5
 					slice = stats[AverageDamage]
 					bash = 3
+					burn = 0
 					#boss cant dodge if stunned
 					#Player attacks
 					#roll the dice when ever the player chooses attack.
@@ -164,27 +181,34 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						print("")
 						print("Quickle Pickle Slice: An average attack with average damage. Low chance to be dodged. Causes bleeding on crit")
 						print("")
+						print("Brutal Burn: An attack that does no damage at the beginning but does tons of damage over time. Average chance to be dodged.")
+						print("")
 						if search_item(inventory, "shield"):
 							print("Shield Bash: A low damage attack that causes the boss to lose their turn GIVING YOU A GUARENTEED HIT. Average chance to be dodged. If dodged, this attack has a chance to count as a block.")
+						blank()
 						pause()
+					if search_item(inventory, "shield"):
 						print("Which attack would you like to do?")
-					print("Type: 'sweep', 'stab', 'slice', or 'bash'. Or type 'choices' to view what each attack means.")
+						print("Type: 'sweep', 'stab', 'slice', 'bash', or burn. Or type 'choices' to view what each attack means.")
+					else:
+						print("Which attack would you like to do?")
+						print("Type: 'sweep', 'stab', 'slice', or burn. Or type 'choices' to view what each attack means.")
 					attackChoice = input("> ")
 					print("")
 					#sweep
 					if attackChoice == "sweep":
 						viewedAttacks = True
 						if stunned == -1:
-							dodge = random.randint(0,100)
+							dodge = random.randint(1,101)
 						else:
 							dodge = 100
-						if dodge >= 60: 
-							bossBleeding += 3
+						if dodge >= 45: 
+							bossBleeding += 5
 							damage_calc = random.randint(sweep-3,sweep+3)
 							if damage_calc == sweep+3:
 								player_attack = sweep+5
 								print("Critical Hit!")
-								playsound('criticalhit.mp3')
+								playsound('sweepcrit.mp3')
 								dismemberChance = random.random() < 0.75
 								if dismemberChance:
 									dismembered = True
@@ -198,7 +222,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 									playsound('criticalhit.mp3')
 								elif damage_calc < sweep:
 									print("Good Hit!")
-									playsound('normalhit.mp3')
+									playsound('greathit.mp3')
 								player_attack = damage_calc
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
@@ -223,10 +247,10 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						else:
 							if damage_calc >= stab:
 								print("Great Hit!")
-								playsound('criticalhit.mp3')
+								playsound('stab.mp3')
 							elif damage_calc < stab:
 								print("Good Hit!")
-								playsound('normalhit.mp3')
+								playsound('stab.mp3')
 							player_attack = damage_calc
 						boss_hp -= player_attack
 						print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
@@ -241,57 +265,80 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 					if attackChoice == "slice":
 						viewedAttacks = True
 						if stunned == -1:
-							dodge = random.randint(0,100)
+							dodge = random.randint(1,101)
 						else:
 							dodge = 100
-						if dodge >= 20:
+						if dodge >= 12:
 							damage_calc = random.randint(slice-3,slice+3)
 							if damage_calc == slice+3:
-								player_attack = slice+5
+								player_attack = slice+3
 								print("Critical Hit!")
 								playsound('criticalhit.mp3')
 							elif damage_calc == slice-3:
-								player_attack = slice-5
+								player_attack = slice-3
 								print("Crappy Hit!")
 								playsound('crappyhit.mp3')
 							else:
 								if damage_calc >= slice:
 									print("Great Hit!")
-									playsound('normalhit.mp3')
+									playsound('greathit.mp3')
 								elif damage_calc < slice:
 									print("Good Hit!")
 									playsound('normalhit.mp3')
-								player_attack = damage_calc
+								player_attack = slice
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
-						elif dodge < 20:
+						else:
 							print(f"{bossnames[boss_number]} dodged your attack!")
 							playsound('woops.mp3')
 						turnOver = True
 
 					#bash
 					if attackChoice == "bash":
+						if search_item(inventory, "shield"):
+							viewedAttacks = True
+							if stunned == -1:
+								dodge = random.randint(1,101)
+							else:
+								dodge = 100
+							if dodge >= 55:
+								print("Great Hit!")
+								playsound('bonk.mp3')
+								player_attack = 3
+								boss_hp -= player_attack
+								print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
+								if stunned == -1:
+									stunned = 1
+									print(f"{bossnames[boss_number]} is stunned! {bossnames[boss_number]} misses their next turn.")
+							else:
+								print(f"{bossnames[boss_number]} dodged your attack!")
+								playsound('woops.mp3')
+								bestOffence = random.randint(0,100)
+								if bestOffence <= 55:
+									print("Even though you missed your attack, you ready your guard!")
+									defending = True
+							turnOver = True
+						else:
+							print("???")
+
+
+					#burn
+					if attackChoice == "burn":
 						viewedAttacks = True
 						if stunned == -1:
-							dodge = random.randint(0,100)
+							dodge = random.randint(1,101)
 						else:
 							dodge = 100
-						if dodge >= 60:
+						if dodge >= 50:
 							print("Great Hit!")
-							playsound('bonk.mp3')
-							player_attack = 3
+							#playsound('burn.mp3')
+							player_attack = 1
 							boss_hp -= player_attack
 							print(f"You hit {bossnames[boss_number]} for {player_attack} damage!")
-							if stunned == -1:
-								stunned = 1
-								print(f"{bossnames[boss_number]} is stunned! {bossnames[boss_number]} misses their next turn.")
-						elif dodge < 60:
+							bossBurning = 3
+						else:
 							print(f"{bossnames[boss_number]} dodged your attack!")
 							playsound('woops.mp3')
-							bestOffence = random.randint(0,100)
-							if bestOffence <= 55:
-								print("Even though you missed your attack, you ready your guard!")
-								defending = True
 						turnOver = True
 
 					if attackChoice == "choices":
@@ -348,7 +395,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 				elif action == 'burger':
 					playsound('ham.mp3')
 					print(f"Burger%: {burgerPercent}")
-					print("2% of a burger heals for 1 hp.")
+					print("1% of a burger heals for 1 hp.")
 					print("Hint: Eating more burger than needed to fill up your health to 100 will give you BurgerHealth")
 					print("BurgerHealth depletes twice as fast.")
 					print("How much of your burger do you want to eat")
@@ -359,11 +406,14 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						print("You cant eat that little burgers!")
 					elif burgerAmount>0:
 						print(f"You eat {burgerAmount}% burgers")
-						playsound('burger.mp3')
 						burgerPercent-=burgerAmount
 						stats[BurgerP]=burgerPercent
-						burgerAmount=int(burgerAmount/2)
+						twothirds = int(2/3)
+						burgerAmount=int(burgerAmount*twothirds)
 						player_hp+=burgerAmount
+						playsound('eat.mp3')
+						print(f"You heal {burgerAmount} health.")
+						print(f"Your HP: {player_hp}")
 				elif action == 'help':
 					help()
 
@@ -383,7 +433,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 		#CODE BOSS DEFENSE!!!
 		#ALSO CODE DIFFERENT BOSS ATTACK
 		#bossnames = ["Phil W. Frencherfrie","south","east","west","Zomburger"]
-		if boss_hp > 0 or talkSucc != True:
+		if boss_hp > 0 and talkSucc != True:
 			if stunned == -1:
 				if attackCharging == False:
 					attackTypeBoss = random.random()
@@ -398,7 +448,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							stunned = 1
 							attackCharging = True
 					else:
-						bossDamage = random.randint(boss_attack-1,boss_attack+2)
+						bossDamage = random.randint(boss_attack-2,boss_attack+4)
 						if attackTypeBoss <= 0.20:
 							attackword = "swipes"
 						elif attackTypeBoss <= 0.40:
@@ -406,15 +456,20 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						elif attackTypeBoss <= 0.60:
 							attackword = "pounces"
 						elif attackTypeBoss <= 0.80:
-							attackword = "strikes"
+							attackword = "bites"
+							
 						else:
 							print(f"{bossnames[boss_number]} charges a strong attack at you. However, they is unable to attack while charging.")
-							bossDamage = random.randint(boss_attack, boss_attack+5)
+							bossDamage = random.randint(boss_attack+12, boss_attack+20)
 							stunned = 1
 							attackCharging = True
 						if attackCharging != True:
 							print(f"{bossnames[boss_number]} {attackword} at you")
+							blank()
 							playsound('bosshit.mp3')
+							if attackword == "bites":
+								print("You are poisoned")
+								playerPoisoned = 3
 
 			if dismembered == True:
 				bossDamage-=int(bossDamage/3)
@@ -426,6 +481,8 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 					if player_armor > 0:
 						damage_taken = int(bossDamage /2)
 						player_armor -= damage_taken
+						print("You block with your shield")
+						playsound("block.mp3")
 						print(f"{bossnames[boss_number]} hits you for {damage_taken} damage! Your armor takes the hit!")
 						stats[Armor] = player_armor
 					#NO ARMOR
@@ -434,14 +491,18 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 						if player_hp > 100:
 							damage_taken = int(bossDamage)
 							player_hp -= damage_taken
-							print(f"You have {int(player_hp-100)} BurgerHealth!")
+							print("You block with your shield")
+							playsound("block.mp3")
 							print(f"{bossnames[boss_number]} hits you for {damage_taken} damage!")
+							print(f"You have {int(player_hp-100)} BurgerHealth remaining!")
 							if player_hp < 100:
 								player_hp+=int((100-player_hp)/2)
 							stats[Health] = player_hp
 						#NO BURGERHEALTH
 						else:
 							damage_taken = int(bossDamage/2)
+							print("You block with your shield")
+							playsound("block.mp3")
 							player_hp-=damage_taken
 							print(f"{bossnames[boss_number]} hits you for {damage_taken} damage!")
 							stats[Health] = player_hp
@@ -474,28 +535,42 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							stats[Health] = player_hp
 			else:
 				if talkSucc != True:
-					print(f"{bossnames[boss_number]} is still stunned!")
+					if attackCharging == True:
+						print(f"{bossnames[boss_number]} is still charging an attack!")
+					elif stunned <1:
+						print(f"{bossnames[boss_number]} is still stunned!")
 				else:
-					print("talk suycceas")
+					print("talk succsess")
 			turnOver = False
-			if stabbed > 0:
-				stabbed-=1
-			if stunned >= 0:
-				stunned-=1
-			if bossBleeding > 0:
-				bossBleeding-=1
-				boss_hp-=6
-				print(f"{bossnames[boss_number]} took 6 damage from bleeding!")
-			if playerPoisoned > 0:
-				playerPoisoned-=1
-				player_hp-=6
-			stats[Health] = player_hp
-			stats[Armor] = player_armor
-			stats[BurgerP] = burgerPercent
-			print("")
-			print(f"Your HP: {player_hp}")
-			print(f"Boss HP: {boss_hp}")
-			pause()
+		if stabbed > 0:
+			stabbed-=1
+		if stunned >= 0:
+			stunned-=1
+		if bossBleeding > 0:
+			blank()
+			bossBleeding-=1
+			boss_hp-=6
+			print(f"{bossnames[boss_number]} took 6 damage from bleeding!")
+			playsound("blood.mp3")
+		if bossBurning > 0:
+			blank()
+			bossBurning-=1
+			boss_hp-=9
+			print(f"{bossnames[boss_number]} took 9 damage from Burning!")
+			playsound("fire.mp3")
+		if playerPoisoned > 0:
+			blank()
+			playerPoisoned-=1
+			player_hp-=3
+			print("You took 3 damage from poison")
+			playsound("poson.mp3")
+		stats[Health] = player_hp
+		stats[Armor] = player_armor
+		stats[BurgerP] = burgerPercent
+		print("")
+		print(f"Your HP: {player_hp}")
+		print(f"Boss HP: {boss_hp}")
+		pause()
 	if player_hp <= 0:
 		stats[Health] = 0
 		print(f"You have been defeated by {bossnames[boss_number]}.")
@@ -503,6 +578,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 	elif boss_hp <= 0 or talkSucc == True:
 		print(f"You have defeated {bossnames[boss_number]}!")
 		playsound('win.mp3')
+		playsound('win2.mp3')
 		bossnames[boss_number] = "dead"
 		if stats[BurgerP] < 100:
 			print("Your burger has been refilled!")
@@ -520,6 +596,7 @@ skipintro = input("> ")
 
 #intro
 if skipintro != 'y':
+	printburger()
 	print('')
 	print("welcome to BurgerQuest")
 	pause()
@@ -544,7 +621,7 @@ if skipintro != 'y':
 	pause()
 	print("Burgerguy grew tired of these annoying customers.")
 	pause()
-	print("Stephen did some research (on twitter), and it turned out that he had been cursed by the evil BurgerKing,	who resides within a burger dungeon!")
+	print("Stephen did some research (on twitter), and it turned out that he had been cursed by the evil BurgerKing, who resides within a burger dungeon!")
 	pause()
 	print("The Burger King was mad that Stephen's burgers were better than his (what a jerk).")
 	pause()
@@ -682,7 +759,7 @@ while True:
 				boss_fight(slime[0],slime[1],slime[2])
 
 		choices = "north, south, east, door, help, choices"
-		print("You are in a dark, damp hallway. There is a very cool looking door to the east. To the north lies a very large door made with a strange red wood. or its just painted. A comically large golden burger shaped lock adorns the face of the door.")
+		print("You are in a dark, damp hallway. There is a very cool looking door to the east. To the north lies a very large door made with a strange red wood. or its just painted. A comically large golden burger shaped lock adorns the face of the door. The room you came from is to the south.")
 		blank()
 		choice = input("> ")
 		bigbooty()
@@ -723,7 +800,7 @@ while True:
 		if search_item(inventory,"shield"):
 			print("The room is dark because you already opened the chest you doofus.")
 		else:
-			print("You enter a very dark room. There is a spotlight on the ceiling, aiming directly down at a very cool looking chest. You can't see anything else.")
+			print("You enter a very dark room. There is a spotlight on the ceiling, aiming directly down at a very cool looking chest. You can't see anything else, except for the door you came from (to the west).")
 		blank()
 		choice = input("> ")
 		bigbooty()
@@ -802,7 +879,7 @@ while True:
 	#puzzle
 	if room == 30: #puzzle
 		choices = 'east, south, use, west, door, vines, help, choices'
-		print('You are in an overgrown room, covered with vines. There are two doors. The door to the West in locked shut by the vines. The door to the left has a bright neon sign saying "SHOP"')
+		print('You are in an overgrown room, covered with vines. There are two doors. The door to the West in locked shut by the vines. The door to the left has a bright neon sign saying "SHOP". The room you came from is to the east.')
 		blank()
 		choice = input("> ")
 		bigbooty()
@@ -822,7 +899,6 @@ while True:
 				if choice == 'torch' or choice == 'burn':
 					print("You burn down the vines, opening the way!")
 					vineBurn = True
-					room = 32
 				if choice == 'cut' or choice == 'sword':
 					print("You cut the vines, opening the way!")
 					blank()
@@ -830,6 +906,7 @@ while True:
 		else:
 			print("stupid.")
 			choice = "placeholder"
+	#shop
 	if room == 31: #shop room
 		choices = 'key piece, burger, leave, north'
 		print("You enter the shop")
@@ -855,6 +932,7 @@ while True:
 				print("out of stock!")
 			elif stats[BurgerBux] >= 300:
 				print("You bought the key piece.")
+				keypieces+=1
 				print("-300 BurgerBux")
 				blank()
 				stats[BurgerBux] -= 300
@@ -867,6 +945,7 @@ while True:
 				print("out of stock!")
 			elif stats[BurgerBux] >= 50:
 				print("You bought a Burger.")
+				stats[BurgerP]+=100
 				print("-50 BurgerBux")
 				blank()
 				stats[BurgerBux] -= 50
