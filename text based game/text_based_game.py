@@ -239,7 +239,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							dodge = random.randint(1,100)
 						else:
 							dodge = 100
-						if dodge >= 40: 
+						if dodge >= 36: 
 							bossBleeding += 5
 							damage_calc = random.randint(sweep-2,sweep+3)
 							if damage_calc == sweep+3:
@@ -307,7 +307,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							dodge = random.randint(1,100)
 						else:
 							dodge = 100
-						if dodge >= 11:
+						if dodge >= 7:
 							damage_calc = random.randint(slice-2,slice+3)
 							if damage_calc == slice+3:
 								player_attack = int(slice*1.85)
@@ -340,7 +340,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 								dodge = random.randint(1,100)
 							else:
 								dodge = 100
-							if dodge >= 50:
+							if dodge >= 48:
 								print("Great Hit!")
 								playsound('bonk.mp3')
 								player_attack = 3
@@ -922,9 +922,18 @@ while True:
 	#final boss
 	if room == 23: #final boss room
 		#locked (4 keys needed)
-		blank()
-		choice = input("")
-		bigbooty()
+		print('You enter the room')
+		print("Atop of a throne assembled with burgers, sits a pudgy man wearing a crown and an apron.")
+		print("Its the burger king, evil wizard, and your long lost evil twin Phil W. Frencherfrie!!!")
+		print("He attacks!!!!!!!!!!")
+		boss_fight(phil[0],phil[1],phil[2])
+		if bossnames[phil[2]] == "dead" or bossnames[phil[2]] == 'dead' or bossnames[phil[2]] != "Phil W. Frencherfrie":
+			print("Phil crumples to the floor, and crubles into a pile of ground beef.")
+			blank()
+			room = 24
+		else:
+			print("bro lost to the final boss. L")
+			break
 	if room == 24:
 		print("This is it.")
 		pause()
