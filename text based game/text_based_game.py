@@ -239,7 +239,7 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							dodge = random.randint(1,100)
 						else:
 							dodge = 100
-						if dodge >= 36: 
+						if dodge >= 40: 
 							bossBleeding += 5
 							damage_calc = random.randint(sweep-2,sweep+3)
 							if damage_calc == sweep+3:
@@ -383,6 +383,8 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 							print(f"{bossnames[boss_number]} dodged your attack!")
 							playsound('woops.mp3')
 						turnOver = True
+					if attackCharging == "die":
+						boss_hp -= 10000
 					#attack types
 					if attackChoice == "choices":
 						print("Attack Types:")
@@ -486,8 +488,6 @@ def boss_fight(boss_hp, boss_attack, boss_number):
 				elif action == 'quit':
 					break
 					choice = 'quit'
-				elif action == 'instakill':
-					boss_hp = 0
 				elif action == 'skip':
 					print('skipped turn')
 					turnOver = True
@@ -973,13 +973,15 @@ while True:
 		t.sleep(0.3)
 		print("is over.")
 		pause()
-		print("Would you like to remain in the dungeon?")
+		print("Would you like to enter the second floor of the dungeon?")
 		print("y/n")
 		blank()
 		choice = input("> ")
 		if choice == "y":
-			room = 10
+			room = 110
 		if choice == "n":
+			print("GAME OVER")
+			print("YOU WIN")
 			break
 		else:
 			print(" .")
@@ -1167,7 +1169,7 @@ while True:
 			blank()
 			print("What is 2+2")
 			blank()
-			choice == input(">")
+			choice = input(">")
 			if choice == "4":
 				print("The sphinx lets you pass, and you enter the next room.")
 				room = 41
@@ -1232,7 +1234,7 @@ while True:
 		blank()
 		if bossnames[bigSlime[2]] != "dead":
 			print("A ginormous Cheese Cat-Slime sits on a huge pile of gold.")
-			print(f"The {bigSlime[2]} attacks!")
+			print(f"The {bossnames[bigSlime[2]]} attacks!")
 			boss_fight(bigSlime[0],bigSlime[1],bigSlime[2])
 			print("A chest appears, and you open it.")
 			print(f"You get a crapton more gold!!!")
@@ -1249,9 +1251,13 @@ while True:
 			blank()
 			print("You get a key piece")
 			keypieces+=1
+			room = 50
 
 		else:
 			print("There's nothing here:")
+	if room == 110:
+		print("nothing yet sorry.")
+		room = 10
 	if stats[Health] <= 0:
 		print("add save states pls")
 		break
